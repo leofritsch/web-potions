@@ -1,0 +1,14 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-night-mode",
+      "name": "Night mode",
+      "description": "Turns any page dark by flipping its colors. Photos and videos stay normal.",
+      "sites": [],
+      "ingredients": [],
+      "css": "html { filter: invert(1) hue-rotate(180deg) !important; background: #fff !important; }\nimg, video, canvas, iframe, svg image { filter: invert(1) hue-rotate(180deg) !important; }",
+      "js": ""
+    }
+  ]
+}

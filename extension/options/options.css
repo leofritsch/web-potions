@@ -24,6 +24,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html {
   min-height: 100%;
   background:
@@ -44,6 +45,16 @@ code { font: 12px var(--code); color: var(--deep); }
     repeating-conic-gradient(var(--potion) 0 25%, var(--lilac) 0 50%) 0 0 / 2px 2px;
 }
 .titlebar .t { font: 19px/1 var(--pixel); text-shadow: 1px 1px 0 var(--deep); }
+
+/* Property-sheet tabs: the selected one sits on top of the line, joined to its page. */
+.tabs { display: flex; gap: 2px; padding: 12px 16px 0; border-bottom: 1px solid var(--ink); }
+.tabs a {
+  position: relative; top: 1px; padding: 7px 16px 6px;
+  font: 16px/1 var(--pixel); color: var(--muted); text-decoration: none;
+  border: 1px solid transparent; border-bottom: 0;
+}
+.tabs a:hover { color: var(--ink); }
+.tabs a[aria-selected="true"] { color: var(--ink); background: var(--paper); border-color: var(--ink); box-shadow: inset 2px 2px 0 #fff; }
 
 section { padding: 22px 24px; border-bottom: 1px solid var(--line); display: flex; flex-direction: column; gap: 10px; }
 h2 { margin: 0; font: 18px/1.1 var(--pixel); font-weight: 500; }
@@ -74,6 +85,25 @@ h2 { margin: 0; font: 18px/1.1 var(--pixel); font-weight: 500; }
 .list .name { font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .list .sites { font: 11px var(--code); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .list .tag { font-size: 10px; padding: 0 4px; color: var(--deep); background: var(--lilac); border: 1px solid var(--lo); }
+.list .ico { flex: none; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; }
+.list .desc { font-size: 12px; line-height: 1.45; margin: 1px 0 3px; }
+.list .ok { font-size: 11px; color: var(--slime); font-weight: bold; margin-top: 3px; }
+.list .got { font-size: 11px; color: var(--muted); white-space: nowrap; }
+.catalog { max-height: none; }
+.catalog li { align-items: flex-start; padding-top: 10px; padding-bottom: 10px; }
+.catalog .ico, .catalog .tag, .catalog .got, .catalog .btn { margin-top: 2px; }
+.catalog .name, .catalog .sites { white-space: normal; }
+
+.find { padding-bottom: 6px; border-bottom: 0; }
+.search { display: flex; align-items: center; gap: 8px; }
+.search input {
+  flex: 1; padding: 7px 9px; font: 13px var(--body);
+  background: var(--card); border: 1px solid var(--ink); border-radius: 0; box-shadow: inset 2px 2px 0 #EEE8FA;
+}
+.search input::placeholder { color: #A39BBB; }
+.status { padding: 14px; text-align: center; color: var(--muted); font-size: 12px; border: 1px dashed var(--lo); }
+a.sub { color: var(--muted); }
+a.sub:hover { color: var(--ink); }
 
 textarea {
   width: 100%; min-height: 110px; padding: 8px; resize: vertical;

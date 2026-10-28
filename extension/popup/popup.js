@@ -74,6 +74,11 @@
 
   $('create').addEventListener('click', () => openOnPage('new'));
   $('settings').addEventListener('click', () => chrome.runtime.openOptionsPage());
+  $('browse').addEventListener('click', () => {
+    const q = $('search').value.trim();
+    chrome.tabs.create({ url: chrome.runtime.getURL(`options/options.html${q ? `?q=${encodeURIComponent(q)}` : ''}#browse`) });
+    window.close();
+  });
   $('open-setup').addEventListener('click', () => send({ type: 'openSetup' }).then(() => window.close()));
   $('search').addEventListener('input', () => {
     shown = PAGE;
@@ -159,7 +164,7 @@
     observer?.disconnect();
     if (!list.length) {
       ul.replaceChildren(
-        h('li', { class: 'empty' }, potions.length ? `No potion matches “${$('search').value.trim()}”.` : 'Your shelf is empty. Open a site you want to change and brew your first potion.'),
+        h('li', { class: 'empty' }, potions.length ? `No potion matches “${$('search').value.trim()}”.` : 'Your shelf is empty. Brew a potion on any site, or Browse ready-made ones.'),
       );
       return;
     }

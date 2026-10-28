@@ -68,7 +68,7 @@
       id: 'dev',
       lastError: null,
       getURL: (p) => `/extension/${p}`,
-      getManifest: () => ({ version: '0.2.0-dev' }),
+      getManifest: () => ({ version: '0.0-dev' }),
       openOptionsPage: () => (location.href = '/dev/options.html'),
       onMessage: { addListener: (fn) => listeners.message.push(fn) },
       sendMessage(msg, cb) {
@@ -80,7 +80,12 @@
         return p;
       },
     },
-    tabs: { query: async () => [{ id: 1, url: window.WP_DEV_URL || location.href }], get: async () => ({ id: 1, url: window.WP_DEV_URL || location.href }), create: () => {} },
+    tabs: {
+      query: async () => [{ id: 1, url: window.WP_DEV_URL || location.href }],
+      get: async () => ({ id: 1, url: window.WP_DEV_URL || location.href }),
+      // Extension pages open as their dev twins.
+      create: ({ url }) => url.startsWith('/extension/options/options.html') && (location.href = url.replace('/extension/options/options.html', '/dev/options.html')),
+    },
     commands: { getAll: (cb) => cb([{ name: 'pick', shortcut: '⌥⇧Z' }]) },
   };
 

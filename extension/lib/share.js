@@ -33,6 +33,7 @@
     return {
       id,
       name: str(raw.name, 120).trim() || 'Imported potion',
+      ...(typeof raw.description === 'string' && raw.description.trim() && { description: raw.description.trim().slice(0, 400) }),
       sites: (Array.isArray(raw.sites) ? raw.sites : []).filter((s) => typeof s === 'string' && s.trim()).map((s) => s.trim().slice(0, 500)),
       enabled: raw.enabled !== false,
       ingredients,

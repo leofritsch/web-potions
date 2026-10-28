@@ -1,0 +1,218 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-instagram-no-pictures",
+      "name": "Instagram, no pictures",
+      "description": "Every photo and video on Instagram turns invisible. Captions and comments stay.",
+      "sites": [
+        "*.instagram.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "style",
+          "selector": "img, video",
+          "css": "visibility: hidden"
+        }
+      ],
+      "css": "",
+      "js": ""
+    },
+    {
+      "id": "wp-medium-unlocked",
+      "name": "Medium unlocked",
+      "description": "Lifts Medium's sign-in walls and pop-ups so you can keep reading. Member-only stories stay locked: their full text isn't on the page.",
+      "sites": [
+        "*.medium.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "unwall"
+        }
+      ],
+      "css": "",
+      "js": ""
+    },
+    {
+      "id": "wp-quora-unlocked",
+      "name": "Quora unlocked",
+      "description": "Lifts the log-in wall and the blur, and lets the page scroll again.",
+      "sites": [
+        "*.quora.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "unwall"
+        }
+      ],
+      "css": "",
+      "js": ""
+    },
+    {
+      "id": "wp-reddit-unlocked",
+      "name": "Reddit unlocked",
+      "description": "Lifts “log in to keep reading” walls and lets the page scroll again.",
+      "sites": [
+        "*.reddit.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "unwall"
+        }
+      ],
+      "css": "",
+      "js": ""
+    },
+    {
+      "id": "wp-youtube-no-recommendations",
+      "name": "YouTube, no recommendations",
+      "description": "The home feed, the Up next sidebar and end-screen suggestions disappear. Search and Subscriptions still work.",
+      "sites": [
+        "*.youtube.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "zap",
+          "selector": "ytd-browse[page-subtype=\"home\"] ytd-rich-grid-renderer"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-watch-next-secondary-results-renderer"
+        },
+        {
+          "type": "zap",
+          "selector": ".ytp-endscreen-content"
+        },
+        {
+          "type": "zap",
+          "selector": ".ytp-ce-element"
+        }
+      ],
+      "css": "",
+      "js": ""
+    },
+    {
+      "id": "wp-youtube-no-shorts",
+      "name": "YouTube, no Shorts",
+      "description": "Hides the Shorts tab, Shorts shelves, and Shorts in feeds and search results.",
+      "sites": [
+        "*.youtube.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "zap",
+          "selector": "ytd-guide-entry-renderer:has(a[title=\"Shorts\"])"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-mini-guide-entry-renderer[aria-label=\"Shorts\"]"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-rich-shelf-renderer[is-shorts]"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-reel-shelf-renderer"
+        },
+        {
+          "type": "zap",
+          "selector": "grid-shelf-view-model:has(a[href^=\"/shorts/\"])"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-rich-item-renderer:has(a[href^=\"/shorts/\"])"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-video-renderer:has(a[href^=\"/shorts/\"])"
+        }
+      ],
+      "css": "",
+      "js": ""
+    },
+    {
+      "id": "wp-break-the-wall",
+      "name": "Break the wall",
+      "description": "Drink it on any page that says “log in to keep reading”. Lifts the wall, the blur and the scroll lock.",
+      "sites": [],
+      "ingredients": [
+        {
+          "type": "unwall"
+        }
+      ],
+      "css": "",
+      "js": ""
+    },
+    {
+      "id": "wp-gray-mode",
+      "name": "Gray mode",
+      "description": "Drains the color out of any page. Less slot machine, more newspaper.",
+      "sites": [],
+      "ingredients": [],
+      "css": "html { filter: grayscale(1) !important; }",
+      "js": ""
+    },
+    {
+      "id": "wp-hide-all-images",
+      "name": "Hide all images",
+      "description": "Every image becomes a blank tile. Hover one to peek.",
+      "sites": [],
+      "ingredients": [
+        {
+          "type": "veil",
+          "mode": "blank"
+        }
+      ],
+      "css": "",
+      "js": ""
+    },
+    {
+      "id": "wp-hype-detector",
+      "name": "Hype detector",
+      "description": "Lights up buzzwords, so you can see how hard a page is selling.",
+      "sites": [],
+      "ingredients": [
+        {
+          "type": "glow",
+          "words": [
+            "revolutionary",
+            "game-changing",
+            "game changer",
+            "disruptive",
+            "unprecedented",
+            "cutting-edge",
+            "next-gen",
+            "seamless",
+            "synergy",
+            "world-class",
+            "AI-powered",
+            "10x",
+            "unlock"
+          ],
+          "color": "#FFB3E6"
+        }
+      ],
+      "css": "",
+      "js": ""
+    },
+    {
+      "id": "wp-night-mode",
+      "name": "Night mode",
+      "description": "Turns any page dark by flipping its colors. Photos and videos stay normal.",
+      "sites": [],
+      "ingredients": [],
+      "css": "html { filter: invert(1) hue-rotate(180deg) !important; background: #fff !important; }\nimg, video, canvas, iframe, svg image { filter: invert(1) hue-rotate(180deg) !important; }",
+      "js": ""
+    },
+    {
+      "id": "wp-unstick-everything",
+      "name": "Unstick everything",
+      "description": "Sticky headers, floating bars and pinned pop-ups go back to being normal parts of the page.",
+      "sites": [],
+      "ingredients": [],
+      "css": "",
+      "js": "// Fixed and sticky elements become regular parts of the page.\nconst changed = [];\nfor (const el of document.querySelectorAll('body *')) {\n  const { position } = getComputedStyle(el);\n  if (position !== 'fixed' && position !== 'sticky') continue;\n  changed.push([el, el.style.getPropertyValue('position'), el.style.getPropertyPriority('position')]);\n  el.style.setProperty('position', position === 'fixed' ? 'absolute' : 'static', 'important');\n}\npotion.onStop(() => {\n  for (const [el, value, priority] of changed) value ? el.style.setProperty('position', value, priority) : el.style.removeProperty('position');\n});"
+    }
+  ]
+}

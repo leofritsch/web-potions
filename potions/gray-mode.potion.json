@@ -1,0 +1,14 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-gray-mode",
+      "name": "Gray mode",
+      "description": "Drains the color out of any page. Less slot machine, more newspaper.",
+      "sites": [],
+      "ingredients": [],
+      "css": "html { filter: grayscale(1) !important; }",
+      "js": ""
+    }
+  ]
+}

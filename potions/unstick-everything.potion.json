@@ -1,0 +1,14 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-unstick-everything",
+      "name": "Unstick everything",
+      "description": "Sticky headers, floating bars and pinned pop-ups go back to being normal parts of the page.",
+      "sites": [],
+      "ingredients": [],
+      "css": "",
+      "js": "// Fixed and sticky elements become regular parts of the page.\nconst changed = [];\nfor (const el of document.querySelectorAll('body *')) {\n  const { position } = getComputedStyle(el);\n  if (position !== 'fixed' && position !== 'sticky') continue;\n  changed.push([el, el.style.getPropertyValue('position'), el.style.getPropertyPriority('position')]);\n  el.style.setProperty('position', position === 'fixed' ? 'absolute' : 'static', 'important');\n}\npotion.onStop(() => {\n  for (const [el, value, priority] of changed) value ? el.style.setProperty('position', value, priority) : el.style.removeProperty('position');\n});"
+    }
+  ]
+}

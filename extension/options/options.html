@@ -2,46 +2,79 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Web Potions settings</title>
+    <title>Web Potions</title>
     <link rel="stylesheet" href="options.css" />
   </head>
   <body>
     <main class="win">
       <div class="titlebar">
         <span id="logo"></span>
-        <span class="t">Web Potions settings</span>
+        <span class="t">Web Potions</span>
+      </div>
+      <nav class="tabs" role="tablist">
+        <a href="#browse" role="tab" id="tab-browse" aria-controls="browse-panel">Browse</a>
+        <a href="#settings" role="tab" id="tab-settings" aria-controls="settings-panel">Settings</a>
+      </nav>
+
+      <div id="browse-panel" role="tabpanel" aria-labelledby="tab-browse" hidden>
+        <section class="find">
+          <label class="search">
+            <span id="search-icon"></span>
+            <input id="search" type="search" placeholder="Search your potions and the catalog" autocomplete="off" spellcheck="false" />
+          </label>
+        </section>
+
+        <section>
+          <div class="head">
+            <h2>Your potions</h2>
+            <span class="sub" id="shelf-summary"></span>
+          </div>
+          <ul class="list" id="shelf"></ul>
+          <p class="sub" id="shelf-empty" hidden></p>
+        </section>
+
+        <section>
+          <div class="head">
+            <h2>Catalog</h2>
+            <a class="sub" href="https://github.com/leofritsch/web-potions/tree/main/potions" target="_blank" rel="noopener">See it on GitHub</a>
+          </div>
+          <p class="sub">Ready-made potions from the Web Potions repo. Get one and it's on your shelf, ready to go.</p>
+          <ul class="list catalog" id="catalog"></ul>
+          <div class="status" id="catalog-status" hidden></div>
+        </section>
       </div>
 
-      <section>
-        <div class="head">
-          <h2>Your shelf</h2>
-          <button class="btn primary" id="export">Export all</button>
-        </div>
-        <p class="sub" id="shelf-summary"></p>
-        <ul class="list" id="shelf"></ul>
-      </section>
+      <div id="settings-panel" role="tabpanel" aria-labelledby="tab-settings" hidden>
+        <section>
+          <div class="head">
+            <h2>Back up your potions</h2>
+            <button class="btn primary" id="export">Export all</button>
+          </div>
+          <p class="sub" id="export-summary"></p>
+        </section>
 
-      <section>
-        <h2>Import potions</h2>
-        <p class="sub">From a <code>.json</code> file someone shared, or one you exported. Potions you already have are updated, new ones are added.</p>
-        <div class="row">
-          <label class="btn" for="file">Choose a file…</label>
-          <input id="file" type="file" accept=".json,application/json" hidden />
-          <span class="sub">or paste the JSON below</span>
-        </div>
-        <textarea id="paste" spellcheck="false" placeholder='{ "webPotions": 1, "potions": [ … ] }'></textarea>
-        <div class="preview" id="preview" hidden></div>
-      </section>
+        <section>
+          <h2>Import potions</h2>
+          <p class="sub">From a <code>.json</code> file someone shared, or one you exported. Potions you already have are updated, new ones are added.</p>
+          <div class="row">
+            <label class="btn" for="file">Choose a file…</label>
+            <input id="file" type="file" accept=".json,application/json" hidden />
+            <span class="sub">or paste the JSON below</span>
+          </div>
+          <textarea id="paste" spellcheck="false" placeholder='{ "webPotions": 1, "potions": [ … ] }'></textarea>
+          <div class="preview" id="preview" hidden></div>
+        </section>
 
-      <section>
-        <h2>Shortcut and permissions</h2>
-        <div class="kv">
-          <span>Pick an element</span>
-          <span><kbd id="shortcut">⌥⇧Z</kbd> <button class="btn quiet" id="shortcuts">Change shortcut</button></span>
-          <span>Allow User Scripts</span>
-          <span id="perm"></span>
-        </div>
-      </section>
+        <section>
+          <h2>Shortcut and permissions</h2>
+          <div class="kv">
+            <span>Pick an element</span>
+            <span><kbd id="shortcut">⌥⇧Z</kbd> <button class="btn quiet" id="shortcuts">Change shortcut</button></span>
+            <span>Allow User Scripts</span>
+            <span id="perm"></span>
+          </div>
+        </section>
+      </div>
 
       <footer>Best viewed in your own way. <span id="version"></span></footer>
     </main>

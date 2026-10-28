@@ -1,0 +1,20 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-medium-unlocked",
+      "name": "Medium unlocked",
+      "description": "Lifts Medium's sign-in walls and pop-ups so you can keep reading. Member-only stories stay locked: their full text isn't on the page.",
+      "sites": [
+        "*.medium.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "unwall"
+        }
+      ],
+      "css": "",
+      "js": ""
+    }
+  ]
+}

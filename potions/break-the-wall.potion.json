@@ -1,0 +1,18 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-break-the-wall",
+      "name": "Break the wall",
+      "description": "Drink it on any page that says “log in to keep reading”. Lifts the wall, the blur and the scroll lock.",
+      "sites": [],
+      "ingredients": [
+        {
+          "type": "unwall"
+        }
+      ],
+      "css": "",
+      "js": ""
+    }
+  ]
+}

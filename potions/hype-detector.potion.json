@@ -1,0 +1,34 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-hype-detector",
+      "name": "Hype detector",
+      "description": "Lights up buzzwords, so you can see how hard a page is selling.",
+      "sites": [],
+      "ingredients": [
+        {
+          "type": "glow",
+          "words": [
+            "revolutionary",
+            "game-changing",
+            "game changer",
+            "disruptive",
+            "unprecedented",
+            "cutting-edge",
+            "next-gen",
+            "seamless",
+            "synergy",
+            "world-class",
+            "AI-powered",
+            "10x",
+            "unlock"
+          ],
+          "color": "#FFB3E6"
+        }
+      ],
+      "css": "",
+      "js": ""
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-instagram-no-pictures",
+      "name": "Instagram, no pictures",
+      "description": "Every photo and video on Instagram turns invisible. Captions and comments stay.",
+      "sites": [
+        "*.instagram.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "style",
+          "selector": "img, video",
+          "css": "visibility: hidden"
+        }
+      ],
+      "css": "",
+      "js": ""
+    }
+  ]
+}

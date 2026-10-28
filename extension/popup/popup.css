@@ -163,6 +163,7 @@ h2 { margin: 0; font: 15px/1 var(--pixel); font-weight: 500; }
 }
 .search input::placeholder { color: #A39BBB; }
 .search input::-webkit-search-cancel-button { filter: grayscale(1); }
+.search .btn { align-self: stretch; }
 .shelf .row { padding-left: 0; padding-right: 0; }
 .bullet { width: 8px; height: 8px; flex: none; background: var(--lilac); box-shadow: 0 0 0 1px var(--lo); }
 .bullet.on { background: var(--slime-hi); box-shadow: 0 0 0 1px var(--slime); }

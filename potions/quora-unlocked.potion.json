@@ -1,0 +1,20 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-quora-unlocked",
+      "name": "Quora unlocked",
+      "description": "Lifts the log-in wall and the blur, and lets the page scroll again.",
+      "sites": [
+        "*.quora.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "unwall"
+        }
+      ],
+      "css": "",
+      "js": ""
+    }
+  ]
+}

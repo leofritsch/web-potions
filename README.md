@@ -21,6 +21,31 @@ Every tweak is a **potion**: a small bundle of changes that runs by itself on th
 sites you choose. Brew one by pointing and clicking, or pour in your own CSS and
 JavaScript. One extension instead of a drawer full of half-working ones.
 
+## Potion catalog
+
+Ready-made potions to start with. Once Web Potions is installed, click **Browse** in
+the toolbar popup and **Get** any of these. One click and it's on your shelf.
+
+<!-- catalog:start -->
+| Potion | Works on | What it does |
+| --- | --- | --- |
+| [Instagram, no pictures](potions/instagram-no-pictures.potion.json) | instagram.com | Every photo and video on Instagram turns invisible. Captions and comments stay. |
+| [Medium unlocked](potions/medium-unlocked.potion.json) | medium.com | Lifts Medium's sign-in walls and pop-ups so you can keep reading. Member-only stories stay locked: their full text isn't on the page. |
+| [Quora unlocked](potions/quora-unlocked.potion.json) | quora.com | Lifts the log-in wall and the blur, and lets the page scroll again. |
+| [Reddit unlocked](potions/reddit-unlocked.potion.json) | reddit.com | Lifts “log in to keep reading” walls and lets the page scroll again. |
+| [YouTube, no recommendations](potions/youtube-no-recommendations.potion.json) | youtube.com | The home feed, the Up next sidebar and end-screen suggestions disappear. Search and Subscriptions still work. |
+| [YouTube, no Shorts](potions/youtube-no-shorts.potion.json) | youtube.com | Hides the Shorts tab, Shorts shelves, and Shorts in feeds and search results. |
+| [Break the wall](potions/break-the-wall.potion.json) | Any page, when you drink it | Drink it on any page that says “log in to keep reading”. Lifts the wall, the blur and the scroll lock. |
+| [Gray mode](potions/gray-mode.potion.json) | Any page, when you drink it | Drains the color out of any page. Less slot machine, more newspaper. |
+| [Hide all images](potions/hide-all-images.potion.json) | Any page, when you drink it | Every image becomes a blank tile. Hover one to peek. |
+| [Hype detector](potions/hype-detector.potion.json) | Any page, when you drink it | Lights up buzzwords, so you can see how hard a page is selling. |
+| [Night mode](potions/night-mode.potion.json) | Any page, when you drink it | Turns any page dark by flipping its colors. Photos and videos stay normal. |
+| [Unstick everything](potions/unstick-everything.potion.json) | Any page, when you drink it | Sticky headers, floating bars and pinned pop-ups go back to being normal parts of the page. |
+<!-- catalog:end -->
+
+Brewed a good one? Share it as a `.potion.json`, drop it in [`potions/`](potions),
+run `node scripts/build-catalog.mjs` and open a pull request.
+
 ## Install
 
 Web Potions isn't on the Chrome Web Store. Loading it yourself takes a minute:
@@ -75,7 +100,7 @@ too.
 
 ## The toolbar popup
 
-<img src="docs/popup.jpg" width="250" align="right" alt="The toolbar popup: the current site, a Spotted here hint, the Active list with switches, a Create new potion button and a searchable shelf of potions.">
+<img src="docs/popup.jpg" width="250" align="right" alt="The toolbar popup: the current site, a Spotted here hint, the Active list with switches, a Create new potion button, and a search box with a Browse button above the shelf of potions.">
 
 **Active:** lists the potions that run on this site, each with a switch. The
 bubbling ones are live right now.
@@ -85,7 +110,9 @@ its sites don't match. Sites only decide where a potion runs by itself.
 
 Below that is your whole shelf, newest first.
 
-The gear opens settings: export everything, import potions, change the shortcut.
+**Browse** opens a page with all your potions and the [catalog](#potion-catalog)
+of ready-made ones. The gear opens settings: export everything, import potions,
+change the shortcut.
 
 <br clear="right">
 
@@ -129,8 +156,9 @@ or pasted JSON. You see what's inside before anything is added.
 ## Privacy
 
 No servers, no analytics, no accounts. Your potions live in Chrome's local storage
-for this extension and stay there unless you export them. The only file Web Potions
-ever fetches is its own pixel font, from inside the extension.
+for this extension and stay there unless you export them. The one thing Web Potions
+fetches from the internet is the catalog, a plain file from this repo, when you open
+**Browse**. Nothing about you goes with it.
 
 ## How it works
 
@@ -142,7 +170,10 @@ ever fetches is its own pixel font, from inside the extension.
   Wall breaker keeps an eye out for walls that come back.
 - `extension/content/` is the in-page UI (brewing window, picker, menus). It's injected
   only when you open it, inside a closed shadow root the page can't reach.
-- `extension/popup/` and `extension/options/` are the toolbar popup and settings.
+- `extension/popup/` is the toolbar popup. `extension/options/` is the Browse and
+  Settings page.
+- `potions/` is the catalog. Each potion is its own file; `catalog.json` bundles them
+  for the Browse page.
 
 Plain HTML, CSS and JavaScript. No build step, no dependencies.
 
@@ -157,6 +188,10 @@ python3 -m http.server 8765   # from the repo root
   `wpUI('pick')`.
 - <http://127.0.0.1:8765/dev/popup.html> is the popup with a sample shelf (add
   `?setup=1` or `?empty=1` for those states).
+- <http://127.0.0.1:8765/dev/options.html#browse> is the Browse page, reading the
+  catalog from your local `potions/` (add `?offline=1` to see it fail).
+- `node scripts/build-catalog.mjs` checks every file in `potions/` and rebuilds
+  `potions/catalog.json` and the catalog table in this README.
 - `node scripts/make-icons.mjs` redraws the icons from the ASCII sprites in
   `extension/lib/pixels.js`.
 

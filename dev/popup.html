@@ -3,80 +3,46 @@
   <head>
     <meta charset="utf-8" />
     <title>Web Potions popup (dev)</title>
-    <link rel="stylesheet" href="../extension/popup/popup.css" />
-    <style>
-      html { background: #d9d4e6; }
-      body { margin: 24px auto; box-shadow: 0 8px 30px rgba(34, 22, 58, .25); max-height: 600px; overflow: auto; }
-    </style>
   </head>
   <body>
-    <div class="titlebar">
-      <span id="logo"></span>
-      <span class="t">Web Potions</span>
-      <span class="counter" id="counter" title="Potions on your shelf"></span>
-      <button class="tb" id="settings" title="Settings, import and export" aria-label="Settings"></button>
-    </div>
-
-    <section id="setup" class="setup" hidden>
-      <h2>One switch to flip</h2>
-      <p>Chrome needs your OK before Web Potions can run scripts on pages.</p>
-      <ol>
-        <li>Open the extension's details page.</li>
-        <li>Turn on <b>Allow User Scripts</b>.</li>
-        <li>Reopen this popup.</li>
-      </ol>
-      <button class="btn primary" id="open-setup">Open details page</button>
-    </section>
-
-    <section class="here" id="here">
-      <div class="host" id="host"></div>
-      <p class="spotted" id="spotted" hidden></p>
-      <h2 class="active"><span>Active:</span></h2>
-      <ul class="list" id="here-list"></ul>
-      <button class="btn primary create" id="create"></button>
-      <p class="note" id="note" hidden></p>
-    </section>
-
-    <section class="shelf">
-      <label class="search">
-        <span id="search-icon"></span>
-        <input id="search" type="search" placeholder="Search all potions" autocomplete="off" spellcheck="false" />
-      </label>
-      <ul class="list" id="all-list"></ul>
-      <div id="more"></div>
-    </section>
-
     <script>
+      // Loads the real popup with chrome.* mocked, as if opened on a Reddit page.
+      // ?setup=1 shows the "Allow User Scripts" step, ?empty=1 starts with no potions.
+      const params = new URLSearchParams(location.search);
       window.WP_DEV_URL = 'https://www.reddit.com/r/programming/';
-      window.WP_DEV_NO_USERSCRIPTS = new URLSearchParams(location.search).has('setup');
+      window.WP_DEV_NO_USERSCRIPTS = params.has('setup');
+
+      // Seed a shelf of potions once.
+      const KEY = 'wp-dev-storage';
+      const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+      if (!saved.potions?.length && !params.has('empty')) {
+        const mk = (name, sites, extra = {}, i = 0) => ({ id: `pdev${String(i).padStart(8, '0')}`, name, sites, enabled: true, ingredients: [], css: '', js: '', repeat: 0, delay: 0, world: 'USER_SCRIPT', ...extra });
+        saved.potions = [
+          ['Reddit unlock', ['*.reddit.com/*'], { ingredients: [{ type: 'unwall' }] }],
+          ['Reddit spice 2.0', ['reddit.com/r/*'], { enabled: false }],
+          ['YouTube calm', ['*.youtube.com/*']],
+          ['Medium free read', ['*.medium.com/*']],
+          ['No Shorts', ['*.youtube.com/shorts/*']],
+          ['Twitter focus', ['*.x.com/*', '*.twitter.com/*']],
+          ['HN glow: Rust, AI', ['news.ycombinator.com/*']],
+          ['LinkedIn quiet', ['*.linkedin.com/*']],
+          ['Instagram no wall', ['*.instagram.com/*']],
+          ['Wiki wide', ['*.wikipedia.org/*']],
+          ['Image veil everywhere', []],
+        ].map(([name, sites, extra], i) => ({ ...mk(name, sites, extra, i), createdAt: Date.now() - i * 60000, updatedAt: Date.now() - i * 60000 }));
+        localStorage.setItem(KEY, JSON.stringify(saved));
+      }
     </script>
     <script src="chrome-mock.js"></script>
-    <script src="../extension/lib/match.js"></script>
-    <script src="../extension/lib/pixels.js"></script>
-    <script src="../extension/lib/store.js"></script>
-    <script src="../extension/lib/brew.js"></script>
     <script>
-      // Seed a shelf of potions once.
-      (async () => {
-        if ((await WP.store.all()).length || new URLSearchParams(location.search).has('empty')) return;
-        const mk = (name, sites, extra = {}) => ({ ...WP.store.draft('https://example.com'), name, sites, ...extra });
-        const list = [
-          mk('Reddit unlock', ['*.reddit.com/*'], { ingredients: [{ type: 'unwall' }] }),
-          mk('Reddit spice 2.0', ['reddit.com/r/*'], { enabled: false }),
-          mk('YouTube calm', ['*.youtube.com/*']),
-          mk('Medium free read', ['*.medium.com/*']),
-          mk('No Shorts', ['*.youtube.com/shorts/*']),
-          mk('Twitter focus', ['*.x.com/*', '*.twitter.com/*']),
-          mk('HN glow: Rust, AI', ['news.ycombinator.com/*']),
-          mk('LinkedIn quiet', ['*.linkedin.com/*']),
-          mk('Instagram no wall', ['*.instagram.com/*']),
-          mk('Wiki wide', ['*.wikipedia.org/*']),
-          mk('Image veil everywhere', []),
-        ];
-        list.forEach((p, i) => (p.updatedAt = Date.now() - i * 60000));
-        await chrome.storage.local.set({ potions: list });
-      })();
+      const frame = '<style>html { background: #d9d4e6; } body { margin: 24px auto; box-shadow: 0 8px 30px rgba(34, 22, 58, .25); max-height: 600px; overflow: auto; }</style>';
+      fetch('/extension/popup/popup.html', { cache: 'no-store' })
+        .then((r) => r.text())
+        .then((html) => {
+          document.open();
+          document.write(html.replace(/(src|href)="(?!#|https?:|\/)([^"]+)"/g, (m, attr, path) => `${attr}="${new URL(path, location.origin + '/extension/popup/').pathname}"`).replace('</head>', `${frame}</head>`));
+          document.close();
+        });
     </script>
-    <script src="../extension/popup/popup.js"></script>
   </body>
 </html>

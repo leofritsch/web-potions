@@ -1,0 +1,45 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-youtube-no-shorts",
+      "name": "YouTube, no Shorts",
+      "description": "Hides the Shorts tab, Shorts shelves, and Shorts in feeds and search results.",
+      "sites": [
+        "*.youtube.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "zap",
+          "selector": "ytd-guide-entry-renderer:has(a[title=\"Shorts\"])"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-mini-guide-entry-renderer[aria-label=\"Shorts\"]"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-rich-shelf-renderer[is-shorts]"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-reel-shelf-renderer"
+        },
+        {
+          "type": "zap",
+          "selector": "grid-shelf-view-model:has(a[href^=\"/shorts/\"])"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-rich-item-renderer:has(a[href^=\"/shorts/\"])"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-video-renderer:has(a[href^=\"/shorts/\"])"
+        }
+      ],
+      "css": "",
+      "js": ""
+    }
+  ]
+}

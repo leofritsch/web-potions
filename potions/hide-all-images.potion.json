@@ -1,0 +1,19 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-hide-all-images",
+      "name": "Hide all images",
+      "description": "Every image becomes a blank tile. Hover one to peek.",
+      "sites": [],
+      "ingredients": [
+        {
+          "type": "veil",
+          "mode": "blank"
+        }
+      ],
+      "css": "",
+      "js": ""
+    }
+  ]
+}

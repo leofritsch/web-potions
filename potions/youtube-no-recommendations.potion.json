@@ -1,0 +1,33 @@
+{
+  "webPotions": 1,
+  "potions": [
+    {
+      "id": "wp-youtube-no-recommendations",
+      "name": "YouTube, no recommendations",
+      "description": "The home feed, the Up next sidebar and end-screen suggestions disappear. Search and Subscriptions still work.",
+      "sites": [
+        "*.youtube.com/*"
+      ],
+      "ingredients": [
+        {
+          "type": "zap",
+          "selector": "ytd-browse[page-subtype=\"home\"] ytd-rich-grid-renderer"
+        },
+        {
+          "type": "zap",
+          "selector": "ytd-watch-next-secondary-results-renderer"
+        },
+        {
+          "type": "zap",
+          "selector": ".ytp-endscreen-content"
+        },
+        {
+          "type": "zap",
+          "selector": ".ytp-ce-element"
+        }
+      ],
+      "css": "",
+      "js": ""
+    }
+  ]
+}
