@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "Web Potions",
+  "version": "0.3.0",
+  "description": "Brew little potions that make websites behave the way you want.",
+  "minimum_chrome_version": "135",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "Web Potions",
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_ui": {
+    "page": "options/options.html",
+    "open_in_tab": true
+  },
+  "permissions": ["storage", "userScripts", "scripting", "contextMenus"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/ctx.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["fonts/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "commands": {
+    "pick": {
+      "suggested_key": { "default": "Alt+Shift+Z" },
+      "description": "Pick an element to zap or restyle"
+    }
+  }
+}

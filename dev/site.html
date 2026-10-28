@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Threadit: the front page of somewhere</title>
+    <style>
+      body { margin: 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; background: #eef1f4; color: #1a1a1b; overflow: hidden; }
+      header.top { position: sticky; top: 0; display: flex; align-items: center; gap: 16px; padding: 10px 24px; background: #fff; border-bottom: 1px solid #ddd; z-index: 10; }
+      header.top b { color: #ff4500; font-size: 20px; }
+      .layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; max-width: 1000px; margin: 24px auto; padding: 0 24px; }
+      .post { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 14px 16px; margin-bottom: 12px; }
+      .post h2 { margin: 0 0 6px; font-size: 18px; }
+      .post img { width: 100%; height: 180px; object-fit: cover; border-radius: 4px; display: block; margin-top: 8px; }
+      .promoted { border-color: #ffb000; background: #fffaf0; }
+      .promoted::before { content: 'Promoted'; font-size: 11px; color: #a07000; }
+      aside .card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 14px; margin-bottom: 12px; }
+      .feed { filter: blur(4px); }
+      .wall { position: fixed; inset: 0; background: rgba(0, 0, 0, .55); display: grid; place-items: center; z-index: 100; }
+      .wall .modal { width: 380px; background: #fff; border-radius: 12px; padding: 28px; text-align: center; }
+      .wall button { background: #ff4500; color: #fff; border: 0; border-radius: 20px; padding: 10px 24px; font-weight: bold; }
+      .cookie { position: fixed; left: 0; right: 0; bottom: 0; background: #1a1a1b; color: #fff; padding: 12px 24px; z-index: 50; }
+    </style>
+  </head>
+  <body>
+    <header class="top"><b>threadit</b><input placeholder="Search Threadit" /><span class="spacer"></span><button class="login-btn">Log in</button></header>
+    <div class="layout">
+      <main class="feed" id="feed"></main>
+      <aside>
+        <div class="card trending"><b>Trending today</b><p>Crypto winter returns, AI startups raise again, and a cat learns to open doors.</p></div>
+        <div class="card"><b>About community</b><p>A place to talk about everything.</p></div>
+      </aside>
+    </div>
+    <div class="wall" data-testid="login-wall">
+      <div class="modal">
+        <h2>Log in to keep reading</h2>
+        <p>See more posts from r/everything by logging in.</p>
+        <button>Log in</button>
+      </div>
+    </div>
+    <div class="cookie">We use cookies. Many, many cookies.</div>
+
+    <script>
+      const titles = [
+        'New AI model writes better commit messages than me',
+        'I built a birdhouse out of old keyboards',
+        'Crypto exchange goes down for the 4th time this week',
+        'What is the most underrated city to visit?',
+        'My grandmother just discovered memes',
+        'AI art contest sparks debate',
+        'Photos from the northern lights last night',
+        'Is it worth learning Rust in 2026?',
+      ];
+      const hue = (i) => (i * 47) % 360;
+      const img = (i) =>
+        'data:image/svg+xml,' +
+        encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200"><defs><linearGradient id="g"><stop offset="0" stop-color="hsl(${hue(i)},70%,60%)"/><stop offset="1" stop-color="hsl(${hue(i) + 60},70%,45%)"/></linearGradient></defs><rect width="600" height="200" fill="url(#g)"/><circle cx="480" cy="60" r="34" fill="#fff8"/></svg>`);
+      const feed = document.getElementById('feed');
+      titles.forEach((t, i) => {
+        const el = document.createElement('article');
+        el.className = 'post' + (i % 3 === 2 ? ' promoted' : '');
+        el.innerHTML = `<h2>${t}</h2><p>Posted by u/someone ${i + 2}h ago · ${(i * 37) % 900} comments</p>${i % 2 ? `<img src="${img(i)}" alt="">` : ''}`;
+        feed.append(el);
+      });
+    </script>
+
+    <script src="chrome-mock.js"></script>
+    <script src="../extension/lib/match.js"></script>
+    <script src="../extension/lib/pixels.js"></script>
+    <script src="../extension/lib/store.js"></script>
+    <script src="../extension/lib/brew.js"></script>
+    <script src="../extension/lib/share.js"></script>
+    <script src="../extension/content/ctx.js"></script>
+    <script src="../extension/content/dom.js"></script>
+    <script src="../extension/content/selector.js"></script>
+    <script src="../extension/content/diagnose.js"></script>
+    <script src="../extension/content/picker.js"></script>
+    <script src="../extension/content/menu.js"></script>
+    <script src="../extension/content/panel.js"></script>
+    <script src="../extension/content/ui.js"></script>
+    <script>
+      window.wpDev = (action, id) => wpUI(action, { id });
+      // Auto-run saved potions like a registered user script would.
+      WP.store.all().then((list) =>
+        list.filter((p) => p.enabled && WP.match.test(p.sites, location.href)).forEach((p) =>
+          WP.brew.sources(p, { mode: 'auto' }).forEach((s) => (0, eval)(s.code)),
+        ),
+      );
+    </script>
+  </body>
+</html>
