@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="extension/icons/icon128.png" width="96" height="96" alt="A pixelated purple potion">
+  <img src="docs/logo.png" width="128" height="128" alt="A pixelated purple potion">
 </p>
 
 <h1 align="center">Web Potions</h1>
