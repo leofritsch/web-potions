@@ -40,7 +40,7 @@
 
   // --- browse -------------------------------------------------------------------
 
-  const ICONS = { zap: 'picker', style: 'brush', glow: 'glow', unscroll: 'lock', veil: 'veil' };
+  const ICONS = { zap: 'picker', style: 'brush', glow: 'glow', unscroll: 'scroll', veil: 'veil' };
   const iconFor = (p) =>
     h('span', { class: 'ico' }, WP.pixels.svg(ICONS[p.ingredients?.[0]?.type] || (p.js?.trim() ? 'wand' : p.css?.trim() ? 'brush' : 'potion'), 1.5));
   const sitesText = (p) => (p.sites?.length ? p.sites.join(', ') : 'No sites, drink only');

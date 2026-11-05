@@ -8,8 +8,9 @@
     <script>
       // Loads the real popup with chrome.* mocked, as if opened on a Reddit page.
       // ?setup=1 shows the "Allow User Scripts" step, ?empty=1 starts with no potions.
+      // ?url= sets the page it pretends to be on, ?bare=1 drops the backdrop for pictures.
       const params = new URLSearchParams(location.search);
-      window.WP_DEV_URL = 'https://www.reddit.com/r/programming/';
+      window.WP_DEV_URL = params.get('url') || 'https://www.reddit.com/r/programming/';
       window.WP_DEV_NO_USERSCRIPTS = params.has('setup');
 
       // Seed a shelf of potions once.
@@ -35,7 +36,7 @@
     </script>
     <script src="chrome-mock.js"></script>
     <script>
-      const frame = '<style>html { background: #d9d4e6; } body { margin: 24px auto; box-shadow: 0 8px 30px rgba(34, 22, 58, .25); max-height: 600px; overflow: auto; }</style>';
+      const frame = params.has('bare') ? '' : '<style>html { background: #d9d4e6; } body { margin: 24px auto; box-shadow: 0 8px 30px rgba(34, 22, 58, .25); max-height: 600px; overflow: auto; }</style>';
       fetch('/extension/popup/popup.html', { cache: 'no-store' })
         .then((r) => r.text())
         .then((html) => {

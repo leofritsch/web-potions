@@ -1,15 +1,16 @@
-// Looks at the page for the usual annoyances (overlays, banners stuck to the screen,
-// locked scrolling) and proposes an ingredient for each.
+// Looks at the page for two everyday annoyances, a bar stuck to the bottom of the screen
+// and stuck scrolling, and proposes an ingredient for each. It doesn't offer to clear
+// dialogs or anything covering the page.
 (function () {
   const UI = (self.WPUI = self.WPUI || {});
   if (UI.diagnose) return;
 
-  const RANK = { overlay: 2, banner: 1 };
   const LABELS = {
-    overlay: 'Overlay covering the page',
     banner: 'Banner stuck on screen',
-    scroll: 'Scrolling is locked',
+    scroll: 'Scrolling is stuck',
   };
+  const DIALOG = 'dialog, [role="dialog"], [aria-modal="true"], [role="alertdialog"]';
+  const NAV = 'header, nav, [role="banner"], [role="navigation"]';
 
   const clip = (text, n = 46) => {
     const t = String(text || '').replace(/\s+/g, ' ').trim();
@@ -29,18 +30,11 @@
     return clip(text.split('\n').find((s) => s.trim()));
   }
 
-  function classify(el, cs) {
-    const modal = el.matches('dialog[open], [role="dialog"], [aria-modal="true"], [role="alertdialog"]');
-    if (cs.position !== 'fixed' && !modal) return null;
-    if (cs.visibility === 'hidden' || Number(cs.opacity) === 0 || cs.display === 'none') return null;
+  function isBanner(el, cs) {
+    if (cs.position !== 'fixed' || el.closest(DIALOG) || el.matches(NAV)) return false;
+    if (cs.visibility === 'hidden' || Number(cs.opacity) === 0 || cs.display === 'none') return false;
     const cov = coverage(el);
-    const r = el.getBoundingClientRect();
-    const nav = el.matches('header, nav, [role="banner"], [role="navigation"]');
-    const shell = el.querySelector('main, article, [role="main"], [role="feed"]');
-    if (cov >= 0.3 && !shell) return 'overlay';
-    if (modal && cov >= 0.04) return 'overlay';
-    if (!nav && cov >= 0.05 && r.top > innerHeight * 0.45) return 'banner';
-    return null;
+    return cov >= 0.05 && cov < 0.3 && el.getBoundingClientRect().top > innerHeight * 0.45;
   }
 
   UI.diagnose = function diagnose() {
@@ -56,21 +50,17 @@
         for (const el of document.elementsFromPoint(innerWidth * fx, innerHeight * fy)) {
           if (seen.has(el) || el === html || el === body || el.localName === 'web-potions-ui') continue;
           seen.add(el);
-          const cs = getComputedStyle(el);
-          const kind = classify(el, cs);
-          if (!kind) continue;
-          // Keep the outermost element of an overlay; its children don't count twice.
-          const inner = hits.findIndex((h) => el.contains(h.el));
-          if (inner !== -1) {
-            const prev = hits[inner];
-            hits[inner] = { el, kind: RANK[prev.kind] > RANK[kind] ? prev.kind : kind };
-          } else if (!hits.some((h) => h.el.contains(el))) hits.push({ el, kind });
+          if (!isBanner(el, getComputedStyle(el))) continue;
+          // Keep the outermost element of a banner; its children don't count twice.
+          const inner = hits.findIndex((hit) => el.contains(hit));
+          if (inner !== -1) hits[inner] = el;
+          else if (!hits.some((hit) => hit.contains(el))) hits.push(el);
         }
       }
     }
 
-    for (const { el, kind } of hits.sort((a, b) => RANK[b.kind] - RANK[a.kind])) {
-      found.push({ kind, label: LABELS[kind], detail: headline(el), el, fix: [{ type: 'zap', selector: UI.selector.unique(el) }] });
+    for (const el of hits) {
+      found.push({ kind: 'banner', label: LABELS.banner, detail: headline(el), el, fix: [{ type: 'zap', selector: UI.selector.unique(el) }] });
     }
     const hidden = (cs) => cs.overflowY === 'hidden' || cs.overflowY === 'clip';
     const hcs = getComputedStyle(html);

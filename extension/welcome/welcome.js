@@ -3,52 +3,9 @@
   const $ = (id) => document.getElementById(id);
   const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  WP.pixels.sprites.mirror = [
-    '..............yy..............',
-    '.............kkkk.............',
-    '..........kkkkkkkkkk..........',
-    '........kkkyyyyyyyykkk........',
-    '.......kkyyyyyyyyyyyykk.......',
-    '......kkyyyykkkkkkyyyykk......',
-    '.....kkyyykkkPPPPkkkyyykk.....',
-    '.....kyyykpPpPpPpPpPkyyck.....',
-    '....kyyykPPpPPPpPPPpPkccck....',
-    '...kkyykpPpPpPpwpPpPpPkcckk...',
-    '...kyykpPpPpPpwwPpPpPpPkcck...',
-    '..kkyykpppppppwppppppppkcckk..',
-    '..kyykpppppppwwppppyppppkcck..',
-    '..kyykppppppwwppppyyypppkcck..',
-    '..kykpppppppwwpppppypppppkck..',
-    '.kyykppppppwwppppppppppppkcck.',
-    '.kyykppppppwwppppppppppppkcCk.',
-    '.kyykpppppwwpppppppppppppkCCk.',
-    '.kyyppppppwpppppppppppppppCCk.',
-    '.kyympmpywwpmpmpmpmpmpmpmpCCk.',
-    '.kykpmpmpmpmpmpmpmpmpwpmpmkCk.',
-    '.kyympmmmpmmmpmmmpmmmpmmmpCCk.',
-    '.kyymmpmmmpmmmpmmmpmmmpmmmCCk.',
-    '.kyykmmmmmmmmmmmmmmmmmmmmkCCk.',
-    '.kyykmmmmmwmmmmmmmmmmmmmmkCCk.',
-    '.kyykmmmmwwwmmmmmmmmmmmmmkCCk.',
-    '..kykmmmmmwmmmmmmmmgmmmmmkCk..',
-    '..kcckmmmmmmmmmmmmgggmmmkCCk..',
-    '..kcckmmmmmmmmmmmmmgmmmmkCCk..',
-    '..kkcckmmmmmmmmmmmmmmmmkCCkk..',
-    '...kcckmmmmmmmmmmmmmmmmkCCk...',
-    '...kkccklmlmlmymlmlmlmkCCkk...',
-    '....kcccklmlmlmlmlmlmkCCCk....',
-    '.....kccckllllllllllkCCCk.....',
-    '.....kkccCkkklmllkkkCCCkk.....',
-    '......kkCCCCkkkkkkCCCCkk......',
-    '.......kkCCCCCCCCCCCCkk.......',
-    '........kkkCCCCCCCCkkk........',
-    '..........kkkkkkkkkk..........',
-    '............kCCCCk............',
-    '.........kCCCCCCCCCCk.........',
-    '.........kkkkkkkkkkkk.........',
-  ];
-  $('wand').append(WP.pixels.svg('wand', 7));
-  $('mirror').append(WP.pixels.svg('mirror', 6));
+  $('wand').append(WP.pixels.svg('bigWand', 3));
+  $('mirror').append(WP.pixels.svg('mirror', 9));
+  $('potion').append(WP.pixels.svg('potion', 16));
 
   // --- the same fake page, before and after -------------------------------------------
 
@@ -56,18 +13,18 @@
   document.querySelector('.scene.before').append(page());
   document.querySelector('.scene.after').append(page());
 
-  // --- a night sky, dithered like it's 2001 ---------------------------------------------
+  // --- the one picture on the "after" page: a night sky, dithered like it's 2001 ---------
 
   const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
   const SKY = ['#170A36', '#26104F', '#3D1680', '#6A12C4', '#9B30FF', '#FF7AD9', '#7CF29A'];
-  function paintSky(canvas, { glow = 1 } = {}) {
+  function paintSky(canvas) {
     const ctx = canvas.getContext('2d');
     const { width: w, height: h } = canvas;
     for (let y = 0; y < h; y++) {
       for (let x = 0; x < w; x++) {
         const t = y / h;
         const ripple = Math.sin(x * 0.045 + 2 * Math.sin(x * 0.013)) * 0.1 + Math.sin(x * 0.11 + 1) * 0.03;
-        const v = Math.max(0, Math.min(1, (t * 0.82 + ripple * (0.3 + t)) ** 1.7 * glow));
+        const v = Math.max(0, Math.min(1, (t * 0.82 + ripple * (0.3 + t)) ** 1.7 * 1.2));
         const i = Math.min(SKY.length - 1, Math.floor(v * (SKY.length - 1) + BAYER[y % 4][x % 4] / 16));
         ctx.fillStyle = SKY[i];
         ctx.fillRect(x, y, 1, 1);
@@ -82,21 +39,17 @@
       ctx.fillStyle = next() > 0.8 ? '#FFE27A' : '#FFFFFF';
       ctx.fillRect(x, y, 1, 1);
     }
-  }
-  for (const canvas of document.querySelectorAll('canvas.sky')) paintSky(canvas);
-  document.querySelectorAll('.after .pic canvas').forEach((canvas) => {
-    paintSky(canvas, { glow: 1.2 });
-    const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#FFE27A';
-    ctx.fillRect(108, 4, 8, 6);
-    ctx.fillRect(109, 3, 6, 8);
-  });
+    ctx.fillRect(108, 20, 8, 6);
+    ctx.fillRect(109, 19, 6, 8);
+  }
+  paintSky(document.querySelector('.after .pic canvas'));
 
   // --- the wand sweeps once, then the seam is yours to drag -----------------------------
 
-  const hero = $('hero');
+  const compare = $('compare');
   const slider = $('slider');
-  const seam = (value) => hero.style.setProperty('--seam', `${value}%`);
+  const seam = (value) => compare.style.setProperty('--seam', `${value}%`);
   const REST = 46;
   let touched = false;
 
@@ -129,6 +82,14 @@
       seam(REST);
     }, LONG + 100);
   }
+
+  // --- "there's more below", until the setup list is on screen ---------------------------
+
+  const checks = document.querySelector('.checks');
+  const updateCue = () => $('scroll-cue').classList.toggle('gone', checks.getBoundingClientRect().top < innerHeight);
+  addEventListener('scroll', updateCue, { passive: true });
+  addEventListener('resize', updateCue);
+  updateCue();
 
   // --- setup, ticking itself off as you do it ---------------------------------------------
 

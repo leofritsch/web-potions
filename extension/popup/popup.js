@@ -237,7 +237,7 @@
   });
 
   // What the page is doing to you, in one sentence; the brewing window offers the fixes.
-  const PHRASES = { overlay: 'an overlay', banner: 'a stuck banner', scroll: 'locked scrolling' };
+  const PHRASES = { banner: 'a stuck banner', scroll: 'stuck scrolling' };
   async function renderSpotted() {
     if (!web) return;
     const { findings = [] } = (await send({ type: 'diagnose', tabId })) || {};

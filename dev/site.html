@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <title>Threadit: the front page of somewhere</title>
     <style>
-      body { margin: 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; background: #eef1f4; color: #1a1a1b; overflow: hidden; }
+      body { margin: 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; background: #eef1f4; color: #1a1a1b; }
       header.top { position: sticky; top: 0; display: flex; align-items: center; gap: 16px; padding: 10px 24px; background: #fff; border-bottom: 1px solid #ddd; z-index: 10; }
       header.top b { color: #ff4500; font-size: 20px; }
       .layout { display: grid; grid-template-columns: 1fr 300px; gap: 24px; max-width: 1000px; margin: 24px auto; padding: 0 24px; }
@@ -14,14 +14,12 @@
       .promoted { border-color: #ffb000; background: #fffaf0; }
       .promoted::before { content: 'Promoted'; font-size: 11px; color: #a07000; }
       aside .card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 14px; margin-bottom: 12px; }
-      .popup { position: fixed; inset: 0; background: rgba(0, 0, 0, .55); display: grid; place-items: center; z-index: 100; }
-      .popup .modal { width: 380px; background: #fff; border-radius: 12px; padding: 28px; text-align: center; }
-      .popup button { background: #ff4500; color: #fff; border: 0; border-radius: 20px; padding: 10px 24px; font-weight: bold; }
-      .cookie { position: fixed; left: 0; right: 0; bottom: 0; background: #1a1a1b; color: #fff; padding: 12px 24px; z-index: 50; }
+      .chat { position: fixed; left: 24px; bottom: 76px; width: 240px; background: #fff; border: 1px solid #ccc; border-radius: 12px; padding: 14px 16px; box-shadow: 0 4px 16px rgba(0, 0, 0, .2); z-index: 60; }
+      .promo { position: fixed; left: 0; right: 0; bottom: 0; background: #1a1a1b; color: #fff; padding: 14px 24px; text-align: center; font-weight: bold; z-index: 50; }
     </style>
   </head>
   <body>
-    <header class="top"><b>threadit</b><input placeholder="Search Threadit" /><span class="spacer"></span><button class="login-btn">Log in</button></header>
+    <header class="top"><b>threadit</b><input placeholder="Search Threadit" /></header>
     <div class="layout">
       <main class="feed" id="feed"></main>
       <aside>
@@ -29,14 +27,8 @@
         <div class="card"><b>About community</b><p>A place to talk about everything.</p></div>
       </aside>
     </div>
-    <div class="popup" data-testid="newsletter-popup">
-      <div class="modal">
-        <h2>Don't miss a thing!</h2>
-        <p>Get the Threadit newsletter, seven times a day.</p>
-        <button>Subscribe</button>
-      </div>
-    </div>
-    <div class="cookie">We use cookies. Many, many cookies.</div>
+    <div class="chat"><b>Psst!</b> Want to chat about birdhouses?</div>
+    <div class="promo">Flash sale! One hour only! Maybe two!</div>
 
     <script>
       const titles = [
@@ -82,7 +74,7 @@
       // Set up the README's pictures: ?shot=spotted has the brewing window open, and
       // ?shot=fixed is the same page cleaned up.
       const shot = new URLSearchParams(location.search).get('shot');
-      const cleanUp = { id: 'devfix', name: 'Quiet Threadit', sites: [], ingredients: [{ type: 'unscroll' }, { type: 'zap', selector: '.popup' }, { type: 'zap', selector: '.cookie' }], css: '', js: '' };
+      const cleanUp = { id: 'devfix', name: 'Quiet Threadit', sites: [], ingredients: [{ type: 'zap', selector: '.chat' }, { type: 'zap', selector: '.promo' }], css: '', js: '' };
       if (shot === 'spotted') wpUI('new').then(() => wpUI('glow', { words: ['AI', 'Rust'] }));
       if (shot === 'fixed') {
         const glow = { id: 'devglow', name: 'Glow', sites: [], ingredients: [{ type: 'glow', words: ['AI', 'Rust'], color: '#B6FF5C' }], css: '', js: '' };

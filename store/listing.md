@@ -1,8 +1,8 @@
 # Chrome Web Store listing
 
 Everything to paste into the developer dashboard. Keep it true to what the extension does:
-the store rejects misleading descriptions, it counts repeating a word more than 5 times as
-keyword spam, and it bans anything pitched as getting past paywalls or login restrictions.
+the store rejects misleading descriptions, and it counts repeating a word more than 5 times as
+keyword spam.
 
 ## Store listing tab
 
@@ -105,9 +105,16 @@ AI mode is optional and off by default. It lets a browser agent the user already
 - Every save shows a card with an Undo button, and an "Operated by AI" badge shows while a session is active.
 ```
 
-## Images still needed
+## Images
+
+Upload in this order. Rebuild them with `store/render.sh`; the source is `store/art.html`.
 
 - Store icon, 128x128: `extension/icons/icon128.png`
-- At least 1 screenshot, up to 5, each 1280x800
-- Optional small promo tile, 440x280
-- Optional marquee promo tile, 1400x560
+- Screenshots, 1280x800:
+  1. `store/images/1-tagline.png`
+  2. `store/images/2-hide.png`
+  3. `store/images/3-ai.png`
+  4. `store/images/4-switches.png`
+  5. `store/images/5-free.png`
+- Small promo tile, 440x280: `store/images/tile-small.png`
+- Marquee promo tile, 1400x560: `store/images/tile-marquee.png`

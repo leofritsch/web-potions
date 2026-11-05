@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>A plain page with the real picker and menu open (shown inside store/art.html)</title>
+    <style>
+      html, body { margin: 0; height: 100%; overflow: hidden; background: #fff; }
+      .bar { display: flex; align-items: center; gap: 5px; height: 26px; padding: 0 9px; background: #F1EFF5; border-bottom: 1px solid #22163A; }
+      .bar i { width: 8px; height: 8px; background: #fff; border: 1px solid #22163A; }
+      .bar span { flex: 1; height: 12px; margin-left: 8px; background: #fff; border: 1px solid #D8D4E2; }
+      .text { position: absolute; left: 22px; top: 50px; width: 356px; }
+      .text i { display: block; height: 9px; margin-bottom: 13px; background: #ECE9F2; }
+      .text i.head { width: 58%; height: 18px; margin-bottom: 20px; background: #DAD6E4; }
+      .recommended { position: absolute; left: 22px; top: 92px; width: 200px; padding: 14px; font: 13px/1.35 Verdana, sans-serif; color: #000; background: #fff; border: 1px solid #22163A; }
+      .recommended b { display: block; margin-bottom: 10px; font-size: 14px; }
+      .recommended span { display: flex; align-items: center; gap: 9px; margin-top: 8px; }
+      .recommended span i { flex: none; width: 44px; height: 28px; background: #B9B5C6; }
+      .recommended span u { flex: 1; height: 9px; background: #D5D1DF; }
+    </style>
+  </head>
+  <body>
+    <div class="bar"><i></i><i></i><i></i><span></span></div>
+    <div class="text">
+      <i class="head"></i>
+      <i style="width: 92%"></i><i style="width: 86%"></i><i style="width: 95%"></i><i style="width: 80%"></i>
+      <i style="width: 90%"></i><i style="width: 84%"></i><i style="width: 93%"></i><i style="width: 70%"></i>
+      <i style="width: 88%"></i><i style="width: 94%"></i><i style="width: 82%"></i><i style="width: 90%"></i>
+      <i style="width: 86%"></i><i style="width: 92%"></i><i style="width: 78%"></i><i style="width: 90%"></i>
+    </div>
+    <div class="recommended">
+      <b>Recommended for you</b>
+      <span><i></i><u></u></span>
+      <span><i></i><u></u></span>
+      <span><i></i><u></u></span>
+    </div>
+    <script src="/dev/chrome-mock.js"></script>
+    <script src="/extension/lib/match.js"></script>
+    <script src="/extension/lib/pixels.js"></script>
+    <script src="/extension/lib/store.js"></script>
+    <script src="/extension/lib/brew.js"></script>
+    <script src="/extension/lib/share.js"></script>
+    <script src="/extension/content/ctx.js"></script>
+    <script src="/extension/content/dom.js"></script>
+    <script src="/extension/content/selector.js"></script>
+    <script src="/extension/content/picker.js"></script>
+    <script src="/extension/content/menu.js"></script>
+    <script>
+      const UI = self.WPUI;
+      const pop = document.querySelector('.recommended');
+      const picker = new UI.Picker({ onPick() {}, onExit() {}, bar: false });
+      picker.start();
+      picker.lockOn(pop);
+      UI.menus.actions(pop, { x: 164, y: 176 }, { picker, onCommit() {}, onDone() {} });
+      UI.root.querySelector('.menu .item').dispatchEvent(new MouseEvent('mouseenter'));
+    </script>
+  </body>
+</html>

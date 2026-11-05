@@ -8,13 +8,13 @@
   const TOOLS = [
     { type: 'pick', icon: 'picker', title: 'Pick & zap', text: 'Remove or restyle anything on the page' },
     { type: 'glow', icon: 'glow', title: 'Keyword glow', text: 'Highlight words wherever they appear' },
-    { type: 'unscroll', icon: 'lock', title: 'Unlock scroll', text: 'Give the page its scrollbar back' },
+    { type: 'unscroll', icon: 'scroll', title: 'Fix scrolling', text: 'Give the page its scrollbar back' },
     { type: 'veil', icon: 'veil', title: 'Image veil', text: 'Hide images until you hover them' },
     { type: 'css', icon: 'brush', title: 'Custom CSS', text: 'Write your own styles' },
     { type: 'js', icon: 'wand', title: 'Custom JS', text: 'Run your own script' },
   ];
 
-  const SPOT_ICONS = { overlay: 'picker', banner: 'picker', scroll: 'lock' };
+  const SPOT_ICONS = { banner: 'picker', scroll: 'scroll' };
 
   const JS_PLACEHOLDER = `// Runs on matching pages once they're ready.
 // \`potion\` has a few helpers:
@@ -553,8 +553,8 @@ document.querySelector('.newsletter-popup')?.remove();`;
         ),
       );
     } else if (ing.type === 'unscroll') {
-      icon = 'lock';
-      what = 'Unlock scroll';
+      icon = 'scroll';
+      what = 'Fix scrolling';
       detail = 'Lets the page scroll again';
     } else if (ing.type === 'veil') {
       icon = 'veil';
@@ -820,7 +820,7 @@ document.querySelector('.newsletter-popup')?.remove();`;
       return renderForm();
     }
     if (type === 'unscroll') {
-      if (has('unscroll')) return UI.toast('Unlock scroll is already in this potion.');
+      if (has('unscroll')) return UI.toast('Fix scrolling is already in this potion.');
       return addIngredient({ type: 'unscroll' });
     }
     if (type === 'veil') {

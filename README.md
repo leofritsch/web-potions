@@ -7,11 +7,11 @@
 <p align="center">
   <b>Brew the web you want.</b><br>
   Remove what bugs you, restyle what's ugly, highlight what matters,<br>
-  and hide the overlays nobody asked for.
+  and hide the pop-ups nobody asked for.
 </p>
 
 <p align="center">
-  <img src="docs/spotted.jpg" width="820" alt="The brewing window open on a page with a newsletter pop-up. Under “Spotted on this page” it lists the overlay, a stuck cookie banner and locked scrolling, each with a Fix button.">
+  <img src="docs/spotted.jpg" width="820" alt="The brewing window open on a page with a sale banner stuck to the bottom. Under “Spotted on this page” it lists the banner with a Fix button, and below that is the grid of ingredients.">
 </p>
 
 You look at websites all day, and whatever they show you goes straight into your
@@ -57,14 +57,14 @@ Works in Chrome 135 and newer.
 ## Brew your first potion
 
 1. On any page, click the potion in your toolbar, then **Create new potion**.
-2. If the page has an overlay, a stuck banner or locked scrolling, it's already listed
+2. If the page has a stuck banner or stuck scrolling, it's already listed
    under **Spotted on this page**. Click **Fix**, or **Fix all**, and watch it go.
 3. Add more ingredients from the grid, check **Works on**, and **Save potion**.
 
 Next time you visit, the potion runs on its own, before the page has finished loading.
 
 <p align="center">
-  <img src="docs/fixed.jpg" width="820" alt="The same page after Fix all: the pop-up and the cookie banner are gone, the page scrolls, and the word AI glows green.">
+  <img src="docs/fixed.jpg" width="820" alt="The same page after the fix: the sale banner and the chat pop-up are gone, and the word AI glows green.">
 </p>
 
 ## AI mode
@@ -72,7 +72,7 @@ Next time you visit, the potion runs on its own, before the page has finished lo
 Let an AI that drives your browser, like Claude in Chrome, fix sites for you. It looks at the page, tries a fix, reloads to check it, then saves what works and turns it on, with no clicks from you.
 
 <p align="center">
-  <img src="docs/ai-saved.jpg" width="820" alt="A page with its pop-up gone. A card in the corner says an AI saved a potion called Quiet Threadit, shows where its switch is, and offers an Undo button.">
+  <img src="docs/ai-saved.jpg" width="820" alt="A page with its clutter gone. A card in the corner says an AI saved a potion called Quiet Threadit, shows where its switch is, and offers an Undo button.">
 </p>
 
 **Set it up in two steps:**
@@ -126,7 +126,7 @@ too.
 | --- | --- |
 | **Pick & zap** | Remove, blur or restyle any element. Stored as CSS, so it sticks when the page re-renders |
 | **Keyword glow** | Highlights words wherever they appear, iframes included |
-| **Unlock scroll** | Gives you your scrollbar back, and keeps it there |
+| **Fix scrolling** | Gives you your scrollbar back, and keeps it there |
 | **Image veil** | Blurs or blanks images until you hover them |
 | **Custom CSS** | Your own stylesheet |
 | **Custom JS** | Your own script, on a loop or once, right away or after a delay |

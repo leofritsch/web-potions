@@ -339,20 +339,6 @@ chrome.commands.onCommand.addListener(async (command) => {
 
 // --- lifecycle --------------------------------------------------------------
 
-// Wall breaker is gone. Potions that used it keep the part that unlocks scrolling.
-async function migrateIngredients() {
-  const list = await WP.store.all();
-  const old = (p) => (p.ingredients || []).some((i) => i.type === 'unwall');
-  if (!list.some(old)) return;
-  await chrome.storage.local.set({
-    [WP.store.KEY]: list.map((p) => {
-      if (!old(p)) return p;
-      const rest = p.ingredients.filter((i) => i.type !== 'unwall' && i.type !== 'unscroll');
-      return { ...p, ingredients: [{ type: 'unscroll' }, ...rest] };
-    }),
-  });
-}
-
 function boot() {
   chrome.action.setBadgeBackgroundColor({ color: '#9B30FF' });
   chrome.action.setBadgeTextColor?.({ color: '#FFFFFF' });
@@ -360,7 +346,7 @@ function boot() {
   refreshMenus();
 }
 chrome.runtime.onInstalled.addListener((details) => {
-  migrateIngredients().finally(boot);
+  boot();
   if (details.reason === 'install') chrome.tabs.create({ url: chrome.runtime.getURL('welcome/welcome.html') });
 });
 chrome.runtime.onStartup.addListener(boot);

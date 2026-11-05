@@ -412,26 +412,23 @@ await test('read shows what this site may change, and nothing else', async () =>
 });
 
 console.log('Store rules');
-await test('no wall-breaking ingredient, and old potions keep their scroll unlock', async () => {
+await test('an ingredient the extension does not know is refused', async () => {
   const b = await unlocked();
   assert.match((await call(b, 'save', { ingredients: [{ type: 'unwall' }] })).error, /invalid/);
-  b.local.potions = [
-    { id: 'old0000001', name: 'A', sites: ['a.com/*'], ingredients: [{ type: 'unwall' }, { type: 'zap', selector: 'b' }] },
-    { id: 'old0000002', name: 'B', sites: ['a.com/*'], ingredients: [{ type: 'unwall' }, { type: 'unscroll' }] },
-    { id: 'old0000003', name: 'C', sites: ['a.com/*'], ingredients: [{ type: 'veil' }] },
-  ];
-  await b.ctx.migrateIngredients();
-  assert.deepEqual(shelf(b).map((p) => p.ingredients.map((i) => i.type)), [['unscroll', 'zap'], ['unscroll'], ['veil']]);
 });
 await test('nothing in the extension or the catalog pitches getting past walls', () => {
-  const banned = /paywall|login wall|log ?in to (keep|continue)|wall breaker|login-wall|keep reading/i;
+  const banned = /paywall|login wall|log ?in to (keep|continue)|wall breaker|login-wall|keep reading|unlock scroll/i;
   const walk = (dir) => readdirSync(dir, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(`${dir}/${e.name}`) : [`${dir}/${e.name}`]));
-  const hits = [...walk(`${root}extension`), `${root}potions/catalog.json`, `${root}README.md`]
+  const hits = [...walk(`${root}extension`), ...walk(`${root}store`), `${root}potions/catalog.json`, `${root}README.md`]
     .filter((f) => /\.(js|json|html|css|md)$/.test(f))
-    // Only the migration may still name the old ingredient, to retire it.
-    .filter((f) => banned.test(readFileSync(f, 'utf8').replace('Wall breaker is gone', '')))
+    .filter((f) => banned.test(readFileSync(f, 'utf8')))
     .map((f) => f.replace(root, ''));
   assert.deepEqual(hits, []);
+});
+await test('no picture shows an account or subscribe prompt being cleared away', () => {
+  const prompts = /subscribe|sign (me )?up|sign in|log ?in\b/i;
+  const pictures = ['extension/welcome/welcome.html', 'store/art.html', 'store/art-hide.html', 'dev/site.html'];
+  assert.deepEqual(pictures.filter((f) => prompts.test(readFileSync(`${root}${f}`, 'utf8'))), []);
 });
 await test('catalog potions are plain data, with no JavaScript', () => {
   const { potions } = JSON.parse(readFileSync(`${root}potions/catalog.json`, 'utf8'));
