@@ -8,20 +8,20 @@
   const TOOLS = [
     { type: 'pick', icon: 'picker', title: 'Pick & zap', text: 'Remove or restyle anything on the page' },
     { type: 'glow', icon: 'glow', title: 'Keyword glow', text: 'Highlight words wherever they appear' },
-    { type: 'unwall', icon: 'wall', title: 'Wall breaker', text: 'Lift login walls and scroll locks, and keep watching' },
+    { type: 'unscroll', icon: 'lock', title: 'Unlock scroll', text: 'Give the page its scrollbar back' },
     { type: 'veil', icon: 'veil', title: 'Image veil', text: 'Hide images until you hover them' },
     { type: 'css', icon: 'brush', title: 'Custom CSS', text: 'Write your own styles' },
     { type: 'js', icon: 'wand', title: 'Custom JS', text: 'Run your own script' },
   ];
 
-  const SPOT_ICONS = { login: 'wall', overlay: 'wall', banner: 'picker', blur: 'veil', scroll: 'lock' };
+  const SPOT_ICONS = { overlay: 'picker', banner: 'picker', scroll: 'lock' };
 
   const JS_PLACEHOLDER = `// Runs on matching pages once they're ready.
 // \`potion\` has a few helpers:
 //   potion.css('.ad { display: none }')
-//   const el = await potion.waitFor('.login-modal')
+//   const el = await potion.waitFor('.sidebar')
 //   potion.onStop(() => { /* undo when switched off */ })
-document.querySelector('.paywall')?.remove();`;
+document.querySelector('.newsletter-popup')?.remove();`;
 
   const S = {
     potion: null,
@@ -278,9 +278,8 @@ document.querySelector('.paywall')?.remove();`;
     applyCollapsed();
   }
 
-  // A finding counts as handled once its fix (or Wall breaker) is in the potion.
+  // A finding counts as handled once its fix is in the potion.
   function handled(f) {
-    if (f.kind === 'scroll' && (has('unwall') || has('unscroll'))) return true;
     return f.fix.every((fix) => S.potion.ingredients.some((i) => i.type === fix.type && (i.selector || '') === (fix.selector || '') && !i.frame));
   }
 
@@ -318,25 +317,13 @@ document.querySelector('.paywall')?.remove();`;
               onmouseenter: () => UI.outline(f.el),
               onmouseleave: () => UI.outline(null),
             },
-            UI.icon(SPOT_ICONS[f.kind] || 'wall', 1.5),
+            UI.icon(SPOT_ICONS[f.kind] || 'picker', 1.5),
             h('span', { class: 'what' }, f.label),
             h('span', { class: 'detail' }, f.detail ? `“${f.detail}”` : ''),
             handled(f) ? h('span', { class: 'ok' }, 'Fixed') : h('button', { class: 'btn sm', onclick: () => (UI.outline(null), fix([f])) }, 'Fix'),
           ),
         ),
       ),
-      list.some(handled) &&
-        !has('unwall') &&
-        h(
-          'div',
-          { class: 'hint' },
-          'Wall comes back when you scroll?',
-          h(
-            'button',
-            { class: 'btn quiet', title: 'Wall breaker keeps watching the page for new walls', onclick: () => addIngredient({ type: 'unwall' }) },
-            'Add Wall breaker',
-          ),
-        ),
     ];
     els.spotted.replaceChildren(...parts.filter(Boolean));
   }
@@ -565,10 +552,6 @@ document.querySelector('.paywall')?.remove();`;
           }),
         ),
       );
-    } else if (ing.type === 'unwall') {
-      icon = 'wall';
-      what = 'Wall breaker';
-      detail = 'Login walls and scroll locks';
     } else if (ing.type === 'unscroll') {
       icon = 'lock';
       what = 'Unlock scroll';
@@ -836,9 +819,9 @@ document.querySelector('.paywall')?.remove();`;
       S.form = S.form === 'glow' ? null : 'glow';
       return renderForm();
     }
-    if (type === 'unwall') {
-      if (has('unwall')) return UI.toast('Wall breaker is already in this potion.');
-      return addIngredient({ type: 'unwall' });
+    if (type === 'unscroll') {
+      if (has('unscroll')) return UI.toast('Unlock scroll is already in this potion.');
+      return addIngredient({ type: 'unscroll' });
     }
     if (type === 'veil') {
       if (has('veil')) return UI.toast('Image veil is already in this potion.');

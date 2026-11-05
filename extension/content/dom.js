@@ -373,9 +373,55 @@ kbd {
 @keyframes toast-in { from { opacity: 0; transform: translateY(6px); } }
 @keyframes toast-out { to { opacity: 0; transform: translateY(4px); } }
 
+/* what an AI just did, and how to undo it */
+.ai-card {
+  position: fixed; right: 18px; bottom: 18px; width: 318px; max-height: calc(100vh - 36px);
+  overflow: auto; pointer-events: auto;
+  background: var(--paper); border: 1px solid var(--ink); box-shadow: 4px 4px 0 var(--ink);
+  animation: toast-in 160ms cubic-bezier(.2, .8, .2, 1);
+}
+.ai-card .titlebar { cursor: default; }
+.ai-body { display: flex; flex-direction: column; gap: 8px; padding: 11px 12px 12px; }
+.ai-body p { margin: 0; }
+.ai-name { font: 18px/1.15 var(--pixel); overflow-wrap: anywhere; }
+.ai-small { font-size: 11px; color: var(--muted); }
+.ai-pic { display: block; width: 100%; height: auto; border: 1px solid var(--line); }
+.ai-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* while an AI is at work: drifts slowly between rose purple and green, see-through at 70%.
+   The stops in between keep it from turning gray halfway. */
+.ai-badge {
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 11px 5px 7px; white-space: nowrap;
+  font: 500 15px/1 var(--pixel); color: #fff;
+  text-shadow: 1px 1px 0 var(--ink), 1px 0 0 var(--ink), 0 1px 0 var(--ink);
+  background-color: rgba(176, 38, 140, .7);
+  border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
+  animation: ai-badge 16s ease-in-out infinite alternate;
+}
+@keyframes ai-badge {
+  0% { background-color: rgba(176, 38, 140, .7); }
+  35% { background-color: rgba(104, 58, 200, .7); }
+  65% { background-color: rgba(16, 128, 140, .7); }
+  100% { background-color: rgba(18, 146, 82, .7); }
+}
+.vial { position: relative; width: 16px; height: 16px; flex: none; }
+.vial i {
+  position: absolute; left: 7px; top: 3px; width: 2px; height: 2px;
+  background: var(--slime-hi); opacity: 0;
+  animation: bubble 2.4s steps(8, end) infinite;
+}
+.vial i:nth-child(2) { left: 9px; background: #fff; animation-delay: .8s; }
+.vial i:nth-child(3) { left: 6px; animation-delay: 1.6s; }
+@keyframes bubble {
+  0% { transform: translateY(0); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(1px, -9px); opacity: 0; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .pick-box { animation: none; transition: none; }
-  .win.enter, .win.leave, .toast, .toast.out, .menu, .ing.fresh { animation-duration: 1ms; }
+  .pick-box, .ai-badge, .vial i { animation: none; transition: none; }
+  .win.enter, .win.leave, .toast, .toast.out, .menu, .ing.fresh, .ai-card { animation-duration: 1ms; }
 }
 `;
 })();

@@ -6,7 +6,6 @@
     zap: (i) => typeof i.selector === 'string' && i.selector.trim(),
     style: (i) => typeof i.selector === 'string' && i.selector.trim() && typeof i.css === 'string',
     glow: (i) => Array.isArray(i.words) && i.words.some((w) => typeof w === 'string' && w.trim()),
-    unwall: () => true,
     unscroll: () => true,
     veil: () => true,
   };
@@ -42,6 +41,8 @@
       repeat: num(raw.repeat),
       delay: num(raw.delay),
       world: raw.world === 'MAIN' ? 'MAIN' : 'USER_SCRIPT',
+      // The site an AI saved it from. Shows as the "AI" tag.
+      ...(typeof raw.ai === 'string' && raw.ai && { ai: raw.ai.slice(0, 200) }),
       createdAt: num(raw.createdAt) || Date.now(),
     };
   }

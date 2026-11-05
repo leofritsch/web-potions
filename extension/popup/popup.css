@@ -52,9 +52,10 @@ button { font: inherit; color: inherit; }
 }
 .titlebar .tb:active { box-shadow: inset 2px 2px 0 var(--lo); }
 .counter {
-  display: flex; gap: 1px; padding: 2px;
+  display: flex; gap: 1px; padding: 2px; cursor: pointer;
   background: var(--ink); border: 1px solid var(--ink);
 }
+.counter:hover b { color: #fff; }
 .counter b {
   width: 9px; height: 14px; display: grid; place-items: center;
   font: 12px/1 var(--pixel); color: var(--slime-hi); background: #10091F;
@@ -109,6 +110,7 @@ h2 { margin: 0; font: 15px/1 var(--pixel); font-weight: 500; }
 .row .sites { font: 10.5px var(--code); color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .row .live { color: var(--slime); font: 10.5px var(--body); }
 .row .tools { display: flex; gap: 4px; align-items: center; }
+.row .tag { flex: none; padding: 0 4px; font: 10px/1.5 var(--body); color: var(--deep); background: var(--lilac); border: 1px solid var(--lo); }
 .row .edit { opacity: 0; }
 .row:hover .edit, .row:focus-within .edit { opacity: 1; }
 .shelf .row .tools { opacity: 0; }

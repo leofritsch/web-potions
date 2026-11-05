@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Where the switches are (source of extension/help/where-switches.png)</title>
+    <!--
+      Screenshot this at 2x to rebuild the picture:
+      Chrome --headless=new --force-device-scale-factor=2 --window-size=640,206 \
+        --screenshot=extension/help/where-switches.png http://127.0.0.1:8765/dev/help-art.html
+    -->
+    <style>
+      @font-face { font-family: 'WP Pixelify'; src: url('/extension/fonts/pixelify-sans.woff2') format('woff2'); font-weight: 400 700; font-display: block; }
+      :root { --paper: #F7F5FF; --card: #FFF; --ink: #22163A; --muted: #6B6285; --line: #DDD4F2; --potion: #9B30FF; --deep: #6A12C4; --lilac: #E7DAFF; --slime: #17853D; --slime-hi: #7CF29A; --lo: #BDB2D9; --sun: #FFF27A; }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; width: 640px; height: 206px; overflow: hidden; background: var(--paper); color: var(--ink); -webkit-font-smoothing: antialiased; }
+      body { display: grid; grid-template-columns: 1fr 1fr; font: 15px/1.3 Verdana, Tahoma, sans-serif; }
+      .step { position: relative; padding: 18px 18px 14px; display: flex; flex-direction: column; gap: 14px; }
+      .step + .step { border-left: 1px dashed var(--lo); }
+      .say { display: flex; gap: 10px; align-items: flex-start; }
+      .num { flex: none; width: 30px; height: 30px; display: grid; place-items: center; font: 22px/1 'WP Pixelify', sans-serif; color: #fff; background: var(--potion); border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+      .say b { display: block; font: 24px/1.1 'WP Pixelify', sans-serif; font-weight: 500; }
+      .say small { display: block; margin-top: 4px; font-size: 14px; line-height: 1.3; color: var(--muted); }
+
+      /* a browser toolbar, simplified */
+      .bar { display: flex; align-items: center; gap: 8px; margin-top: auto; padding: 9px 10px; background: #E9E6F2; border: 1px solid var(--ink); }
+      .url { flex: 1; min-width: 0; padding: 6px 12px; border-radius: 16px; background: #fff; font-size: 14px; color: var(--muted); white-space: nowrap; overflow: hidden; }
+      .tool { flex: none; width: 36px; height: 36px; display: grid; place-items: center; }
+      .tool.hit { background: var(--sun); outline: 2px solid var(--ink); }
+      .puzzle { width: 22px; height: 22px; fill: #5C5670; }
+
+      /* a popup row, the real styles at a readable size */
+      .pop { margin-top: auto; border: 1px solid var(--ink); background: var(--card); box-shadow: 3px 3px 0 var(--ink); }
+      .title { display: flex; align-items: center; gap: 8px; height: 32px; padding: 0 9px; color: #fff; font: 18px/1 'WP Pixelify', sans-serif; text-shadow: 1px 1px 0 var(--deep); background: var(--potion); border-bottom: 1px solid var(--ink); }
+      .row { display: flex; align-items: center; gap: 8px; padding: 12px 10px; }
+      .name { flex: 1; min-width: 0; font-weight: bold; font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+      .tag { flex: none; padding: 0 5px; font-size: 12px; line-height: 1.5; color: var(--deep); background: var(--lilac); border: 1px solid var(--lo); }
+      .switch { flex: none; position: relative; width: 42px; height: 22px; background: var(--slime-hi); border: 1px solid var(--ink); box-shadow: inset 1px 1px 0 var(--slime); outline: 2px solid var(--ink); outline-offset: 3px; }
+      .switch::after { content: ''; position: absolute; top: 2px; right: 2px; width: 16px; height: 16px; background: #fff; border: 1px solid var(--ink); }
+    </style>
+  </head>
+  <body>
+    <div class="step">
+      <div class="say">
+        <span class="num">1</span>
+        <span><b>Click the potion</b><small>Not there? It's hiding under the puzzle piece.</small></span>
+      </div>
+      <div class="bar">
+        <span class="url">reddit.com</span>
+        <span class="tool">
+          <svg class="puzzle" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3a2.5 2.5 0 0 1 5 0v2h4a1 1 0 0 1 1 1v4h2a2.5 2.5 0 0 1 0 5h-2v5a1 1 0 0 1-1 1h-5v-2a2.5 2.5 0 0 0-5 0v2H4a1 1 0 0 1-1-1v-5h2a2.5 2.5 0 0 0 0-5H3V6a1 1 0 0 1 1-1h5z" /></svg>
+        </span>
+        <span class="tool hit" id="potion"></span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="say">
+        <span class="num">2</span>
+        <span><b>Flip its switch</b><small>Off stays off. On runs by itself. All potions are under Browse.</small></span>
+      </div>
+      <div class="pop">
+        <div class="title">Web Potions</div>
+        <div class="row">
+          <span class="name">Quiet Reddit</span>
+          <span class="tag">AI</span>
+          <span class="switch"></span>
+        </div>
+      </div>
+    </div>
+    <script src="/extension/lib/pixels.js"></script>
+    <script>
+      document.getElementById('potion').append(WP.pixels.svg('potion', 2));
+    </script>
+  </body>
+</html>

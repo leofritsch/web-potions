@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Allow an AI?</title>
+    <link rel="stylesheet" href="../options/options.css" />
+    <style>
+      html { background: var(--paper); }
+      body { padding: 0; }
+      .win { max-width: none; border: 0; box-shadow: none; }
+      section { border-bottom: 0; gap: 12px; }
+      h2 { font-size: 21px; overflow-wrap: anywhere; }
+      .row { margin-top: 6px; flex-wrap: wrap; }
+    </style>
+  </head>
+  <body>
+    <main class="win">
+      <div class="titlebar">
+        <span id="logo"></span>
+        <span class="t">Web Potions</span>
+      </div>
+      <section>
+        <h2 id="title"></h2>
+        <p>An AI is asking to test and save potions for this site. Say yes only if you asked it to.</p>
+        <p class="sub">You won't be asked again for this site. You can take it back in Settings.</p>
+        <div class="row">
+          <button class="btn primary" id="allow"></button>
+          <button class="btn" id="deny">Not now</button>
+        </div>
+      </section>
+    </main>
+    <script src="../lib/pixels.js"></script>
+    <script src="allow.js"></script>
+  </body>
+</html>

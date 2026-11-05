@@ -40,7 +40,7 @@
 
   // --- browse -------------------------------------------------------------------
 
-  const ICONS = { zap: 'picker', style: 'brush', glow: 'glow', unwall: 'wall', unscroll: 'lock', veil: 'veil' };
+  const ICONS = { zap: 'picker', style: 'brush', glow: 'glow', unscroll: 'lock', veil: 'veil' };
   const iconFor = (p) =>
     h('span', { class: 'ico' }, WP.pixels.svg(ICONS[p.ingredients?.[0]?.type] || (p.js?.trim() ? 'wand' : p.css?.trim() ? 'brush' : 'potion'), 1.5));
   const sitesText = (p) => (p.sites?.length ? p.sites.join(', ') : 'No sites, drink only');
@@ -78,8 +78,18 @@
           {},
           iconFor(p),
           h('div', { class: 'txt' }, h('span', { class: 'name' }, p.name), h('span', { class: 'sites' }, sitesText(p))),
+          p.ai && h('span', { class: 'tag', title: `Saved by an AI on ${p.ai}` }, 'AI'),
           p.js?.trim() && h('span', { class: 'tag' }, 'JS'),
-          !p.enabled && p.sites?.length > 0 && h('span', { class: 'tag' }, 'off'),
+          // Drink-only potions have nothing to switch: they only run when you drink them.
+          p.sites?.length > 0 &&
+            h('input', {
+              type: 'checkbox',
+              class: 'switch',
+              checked: p.enabled,
+              title: p.enabled ? 'On: runs by itself on its sites' : 'Off',
+              'aria-label': `${p.name} on or off`,
+              onchange: (e) => chrome.runtime.sendMessage({ type: 'toggle', id: p.id, enabled: e.target.checked }),
+            }),
           confirming === p.id
             ? [
                 h('span', { class: 'sub' }, 'Delete for good?'),
@@ -112,7 +122,8 @@
     try {
       const res = await fetch(CATALOG_URL, { cache: 'no-cache' });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      catalog = WP.share.parse(await res.text());
+      // The catalog is data fetched from GitHub, so it never gets to bring code along.
+      catalog = WP.share.parse(await res.text()).map((p) => ({ ...p, js: '' }));
     } catch (e) {
       console.warn('[Web Potions] catalog:', e);
       catalogFailed = true;
@@ -265,6 +276,58 @@
     preview(text);
     e.target.value = '';
   });
+
+  // --- AI mode ------------------------------------------------------------------
+
+  // The instructions ship inside the extension, so they always match this version and
+  // never depend on a link working.
+  const AI_INTRO = "Here's how to use Web Potions, a Chrome extension I have installed in my real Chrome. Use it for what I'm asking in this message.\n\n";
+  async function aiInstructions() {
+    const text = await (await fetch(chrome.runtime.getURL('skill/web-potions/SKILL.md'))).text();
+    return AI_INTRO + text.replace(/^---[\s\S]*?---\s*/, '');
+  }
+  const showConnect = (on) => {
+    $('ai-connect').hidden = !on;
+    $('ai-sites').hidden = !on;
+  };
+  const { aiMode } = await chrome.storage.local.get('aiMode');
+  $('ai-mode').checked = aiMode === true;
+  showConnect(aiMode === true);
+  $('ai-mode').addEventListener('change', async (e) => {
+    await chrome.storage.local.set({ aiMode: e.target.checked });
+    showConnect(e.target.checked);
+  });
+  $('ai-copy').addEventListener('click', async () => {
+    await navigator.clipboard.writeText(await aiInstructions());
+    $('ai-copied').textContent = 'Copied. Paste them into your AI.';
+    setTimeout(() => ($('ai-copied').textContent = ''), 2600);
+  });
+
+  async function renderAllowedSites() {
+    const { aiAllowedSites: sites = [] } = await chrome.storage.local.get('aiAllowedSites');
+    $('ai-site-empty').hidden = sites.length > 0;
+    $('ai-site-list').replaceChildren(
+      ...sites.map((site) =>
+        h(
+          'li',
+          {},
+          h('span', { class: 'txt' }, h('span', { class: 'sites' }, site)),
+          h('button', { class: 'btn sm', 'aria-label': `Stop allowing ${site}`, onclick: () => chrome.storage.local.set({ aiAllowedSites: sites.filter((s) => s !== site) }) }, 'Remove'),
+        ),
+      ),
+    );
+  }
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === 'local' && changes.aiAllowedSites) renderAllowedSites();
+  });
+  renderAllowedSites();
+
+  const hostOf = (pattern) => pattern.replace(/^\*\./, '').replace(/\/\*$/, '');
+  $('ai-popular-count').textContent = WP.popularSites.length;
+  $('ai-popular-list').textContent = WP.popularSites.map(hostOf).join(', ');
+  const { aiAskOnPopularSites } = await chrome.storage.local.get('aiAskOnPopularSites');
+  $('ai-popular').checked = !aiAskOnPopularSites;
+  $('ai-popular').addEventListener('change', (e) => chrome.storage.local.set({ aiAskOnPopularSites: !e.target.checked }));
 
   // --- shortcut and permissions -------------------------------------------------
 

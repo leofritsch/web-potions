@@ -18,15 +18,15 @@
       if (!saved.potions?.length && !params.has('empty')) {
         const mk = (name, sites, extra = {}, i = 0) => ({ id: `pdev${String(i).padStart(8, '0')}`, name, sites, enabled: true, ingredients: [], css: '', js: '', repeat: 0, delay: 0, world: 'USER_SCRIPT', ...extra });
         saved.potions = [
-          ['Reddit unlock', ['*.reddit.com/*'], { ingredients: [{ type: 'unwall' }] }],
+          ['Quiet Reddit', ['*.reddit.com/*'], { ingredients: [{ type: 'unscroll' }] }],
           ['Reddit spice 2.0', ['reddit.com/r/*'], { enabled: false }],
           ['YouTube calm', ['*.youtube.com/*']],
-          ['Medium free read', ['*.medium.com/*']],
+          ['Medium, no pop-ups', ['*.medium.com/*']],
           ['No Shorts', ['*.youtube.com/shorts/*']],
           ['Twitter focus', ['*.x.com/*', '*.twitter.com/*']],
           ['HN glow: Rust, AI', ['news.ycombinator.com/*']],
           ['LinkedIn quiet', ['*.linkedin.com/*']],
-          ['Instagram no wall', ['*.instagram.com/*']],
+          ['Instagram quiet', ['*.instagram.com/*']],
           ['Wiki wide', ['*.wikipedia.org/*']],
           ['Image veil everywhere', []],
         ].map(([name, sites, extra], i) => ({ ...mk(name, sites, extra, i), createdAt: Date.now() - i * 60000, updatedAt: Date.now() - i * 60000 }));

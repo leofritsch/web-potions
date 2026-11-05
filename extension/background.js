@@ -1,4 +1,4 @@
-importScripts('lib/match.js', 'lib/brew.js', 'lib/store.js');
+importScripts('lib/match.js', 'lib/brew.js', 'lib/store.js', 'lib/share.js', 'lib/popular-sites.js');
 
 const UI_FILES = [
   'lib/match.js',
@@ -149,14 +149,12 @@ async function drink(tabId, id) {
   return { ok: true };
 }
 
-async function toggle(tabId, id, enabled) {
+// On or off takes effect right away, in every open tab of the potion's sites.
+async function toggle(id, enabled) {
   const potion = await WP.store.patch(id, { enabled });
-  if (!potion || tabId == null) return { ok: !!potion };
-  if (enabled) {
-    if (WP.match.test(potion.sites, await tabUrl(tabId))) await run(tabId, potion, { mode: 'auto' }).catch(() => {});
-  } else {
-    await stopOnTab(tabId, id);
-  }
+  if (!potion) return { ok: false };
+  const tabs = (await chrome.tabs.query({})).filter((t) => WP.match.test(potion.sites, t.url));
+  await Promise.all(tabs.map((t) => (enabled ? run(t.id, potion, { mode: 'auto' }).catch(() => {}) : stopOnTab(t.id, id))));
   return { ok: true };
 }
 
@@ -173,7 +171,7 @@ async function testRun(tabId, potion) {
   const wait = Math.min(Number(potion.delay) || 0, 3000) + 200;
   await new Promise((r) => setTimeout(r, wait));
   const state = (await runningOnTab(tabId))[potion.id];
-  return { ok: !state?.error, runs: state?.runs || 0, error: state?.error || null, scheduled: (Number(potion.delay) || 0) > 3000 };
+  return { ok: !state?.error, runs: state?.runs || 0, error: state?.error || null, hits: state?.hits, scheduled: (Number(potion.delay) || 0) > 3000 };
 }
 
 const RESTRICTED = "Chrome doesn't let extensions change this page.";
@@ -238,7 +236,7 @@ const handlers = {
   },
   drink: ({ tabId, id }) => drink(tabId, id),
   stop: ({ tabId, id }) => stopOnTab(tabId, id).then(() => ({ ok: true })),
-  toggle: ({ tabId, id, enabled }) => toggle(tabId, id, enabled),
+  toggle: ({ id, enabled }) => toggle(id, enabled),
   restore: ({ tabId, id }) => restore(tabId, id),
   preview: ({ tabId, potion }) => run(tabId, potion, { mode: 'preview', customJs: false }).then(() => ({ ok: true })),
   test: ({ tabId, potion }) => testRun(tabId, potion),
@@ -260,11 +258,11 @@ chrome.runtime.onMessage.addListener((msg, sender, reply) => {
   const handler = handlers[msg?.type];
   if (!handler) return false;
   const tabId = msg.tabId ?? sender.tab?.id;
-  if (!userScriptsOn() && !NO_SCRIPTS_NEEDED.includes(msg.type)) {
+  if (!userScriptsOn() && !NO_SCRIPTS_NEEDED.includes(msg.type) && !msg.type.startsWith('ai-')) {
     reply({ error: 'Turn on "Allow User Scripts" for Web Potions first.' });
     return false;
   }
-  Promise.resolve(handler({ ...msg, tabId }))
+  Promise.resolve(handler({ ...msg, tabId, sender }))
     .then((res) => reply(res ?? { ok: true }))
     .catch((e) => reply({ error: String(e?.message || e) }));
   return true;
@@ -285,10 +283,13 @@ async function buildMenus() {
   const here = WP.match.isWebUrl(url) ? potions.filter((p) => WP.match.test(p.sites, url)) : [];
   const others = potions.filter((p) => !here.includes(p)).slice(0, 12);
 
-  // The toolbar badge counts the potions running here on their own.
+  // The toolbar badge counts the potions running here on their own. While AI mode is on it
+  // says so instead, in rose, as a reminder that it's on.
   if (tab?.id != null) {
     const n = here.filter((p) => p.enabled).length;
-    chrome.action.setBadgeText({ tabId: tab.id, text: n ? String(n) : '' });
+    const ai = await aiModeOn();
+    chrome.action.setBadgeText({ tabId: tab.id, text: ai ? 'AI' : n ? String(n) : '' });
+    chrome.action.setBadgeBackgroundColor({ tabId: tab.id, color: ai ? '#C2419B' : '#9B30FF' });
   }
 
   await chrome.contextMenus.removeAll();
@@ -323,7 +324,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     else if (id === 'wp-pick') await openUI(tabId, { action: 'pick' });
     else if (id === 'wp-brew') await openUI(tabId, { action: 'new' });
     else if (id === 'wp-glow') await openUI(tabId, { action: 'glow', words: [info.selectionText.trim()] });
-    else if (id.startsWith('wp-p:')) await toggle(tabId, id.slice(5), info.checked);
+    else if (id.startsWith('wp-p:')) await toggle(id.slice(5), info.checked);
     else if (id.startsWith('wp-d:')) await drink(tabId, id.slice(5));
   } catch (e) {
     console.warn('[Web Potions]', e);
@@ -338,13 +339,27 @@ chrome.commands.onCommand.addListener(async (command) => {
 
 // --- lifecycle --------------------------------------------------------------
 
+// Wall breaker is gone. Potions that used it keep the part that unlocks scrolling.
+async function migrateIngredients() {
+  const list = await WP.store.all();
+  const old = (p) => (p.ingredients || []).some((i) => i.type === 'unwall');
+  if (!list.some(old)) return;
+  await chrome.storage.local.set({
+    [WP.store.KEY]: list.map((p) => {
+      if (!old(p)) return p;
+      const rest = p.ingredients.filter((i) => i.type !== 'unwall' && i.type !== 'unscroll');
+      return { ...p, ingredients: [{ type: 'unscroll' }, ...rest] };
+    }),
+  });
+}
+
 function boot() {
   chrome.action.setBadgeBackgroundColor({ color: '#9B30FF' });
   chrome.action.setBadgeTextColor?.({ color: '#FFFFFF' });
   requestSync();
   refreshMenus();
 }
-chrome.runtime.onInstalled.addListener(boot);
+chrome.runtime.onInstalled.addListener(() => migrateIngredients().finally(boot));
 chrome.runtime.onStartup.addListener(boot);
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== 'local' || !changes[WP.store.KEY]) return;
@@ -360,3 +375,5 @@ chrome.tabs.onUpdated.addListener((_id, change, tab) => {
   if (tab.active && (change.url || change.status === 'complete')) refreshMenus();
 });
 chrome.windows.onFocusChanged.addListener(refreshMenus);
+
+importScripts('ai-bridge.js');

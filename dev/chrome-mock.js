@@ -57,7 +57,7 @@
       else hub()?.potions?.[id]?.stop();
     },
     open: ({ action, id }) => window.wpDev?.(action, id),
-    diagnose: () => ({ findings: window.WPUI?.diagnoseSummary?.() || [{ kind: 'login', label: 'Login wall' }, { kind: 'scroll', label: 'Scrolling is locked' }] }),
+    diagnose: () => ({ findings: window.WPUI?.diagnoseSummary?.() || [{ kind: 'overlay', label: 'Overlay covering the page' }, { kind: 'scroll', label: 'Scrolling is locked' }] }),
     frames: () => {},
     openSetup: () => {},
   };

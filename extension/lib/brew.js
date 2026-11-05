@@ -5,8 +5,7 @@
 //   { type: 'zap',    selector }              hide an element
 //   { type: 'style',  selector, css }         restyle an element
 //   { type: 'glow',   words[], color }        highlight keywords (CSS Highlight API, no DOM changes)
-//   { type: 'unwall' }                        lift login walls and scroll locks, keeps watching
-//   { type: 'unscroll' }                      only unlock scrolling
+//   { type: 'unscroll' }                      give the page its scrollbar back, keeps watching
 //   { type: 'veil',   mode: 'blur'|'blank' }  hide images until hovered
 // zap and style may carry `frame: '<site pattern>'`: they then apply inside iframes
 // whose URL matches it (while the top page matches the potion's sites). Glow applies
@@ -53,25 +52,24 @@
     const css = [];
     const glow = [];
     const frames = new Map();
-    let unwall = false;
+    let unscroll = false;
     for (const ing of potion.ingredients || []) {
       if (ing.frame && rule(ing)) {
         if (!frames.has(ing.frame)) frames.set(ing.frame, []);
         frames.get(ing.frame).push(rule(ing));
       } else if (rule(ing)) css.push(rule(ing));
-      else if (ing.type === 'unscroll') unwall = unwall || { overlays: false };
+      else if (ing.type === 'unscroll') unscroll = true;
       else if (ing.type === 'glow' && ing.words?.length) {
         const color = /^#[0-9a-f]{3,8}$/i.test(ing.color) ? ing.color : GLOW_COLORS[0];
         glow.push({ words: ing.words, color });
-      } else if (ing.type === 'unwall') unwall = { overlays: true };
-      else if (ing.type === 'veil') {
+      } else if (ing.type === 'veil') {
         css.push(`${VEILED.split(', ').map((s) => `${s}:not(:hover)`).join(', ')} { ${VEIL_CSS[ing.mode] || VEIL_CSS.blur} }`);
         css.push(`${VEILED} { transition: filter .15s ease-out, opacity .15s ease-out !important; }`);
       }
     }
     if (potion.css?.trim()) css.push(potion.css);
     const frameList = [...frames].map(([pattern, rules]) => ({ pattern: WP.match.toRegExpSource(pattern), css: rules.join('\n') }));
-    return { css: css.join('\n'), glow, unwall, frames: frameList.filter((f) => f.pattern) };
+    return { css: css.join('\n'), glow, unscroll, frames: frameList.filter((f) => f.pattern) };
   }
 
   const hasFrames = (potion) => (potion.ingredients || []).some((i) => i.frame || i.type === 'glow');
@@ -92,7 +90,7 @@
         if (!top || top === 'null') top = document.referrer ? new URL(document.referrer).origin : '';
         if (!top || !cfg.hostPatterns.some((s) => new RegExp(s, 'i').test(`${top}/`))) return;
       }
-      cfg = { ...cfg, mode: 'frame', css: own.map((f) => f.css).join('\n'), unwall: false, customJs: false };
+      cfg = { ...cfg, mode: 'frame', css: own.map((f) => f.css).join('\n'), unscroll: false, customJs: false };
     }
     const KEY = Symbol.for('web-potions');
     const hub =
@@ -219,30 +217,12 @@
       cleanups.push(() => observer.disconnect());
     }
 
-    function startUnwall({ overlays }) {
+    function startUnscroll() {
       const changed = [];
       const set = (el, prop, value) => {
         if (el.style.getPropertyValue(prop) === value && el.style.getPropertyPriority(prop) === 'important') return;
         changed.push([el, prop, el.style.getPropertyValue(prop), el.style.getPropertyPriority(prop)]);
         el.style.setProperty(prop, value, 'important');
-      };
-      const vw = () => innerWidth;
-      const vh = () => innerHeight;
-      const coverage = (el) => {
-        const r = el.getBoundingClientRect();
-        const w = Math.min(r.right, vw()) - Math.max(r.left, 0);
-        const h = Math.min(r.bottom, vh()) - Math.max(r.top, 0);
-        return w > 0 && h > 0 ? (w * h) / (vw() * vh()) : 0;
-      };
-      const isWall = (el, cs) => {
-        if (el === document.documentElement || el === document.body || el.localName === 'web-potions-ui') return false;
-        if (document.fullscreenElement && (el === document.fullscreenElement || el.contains(document.fullscreenElement))) return false;
-        const modal = el.matches('dialog[open], [role="dialog"], [aria-modal="true"]');
-        if (cs.position !== 'fixed' && !modal) return false;
-        if (coverage(el) < (modal ? 0.08 : 0.3)) return false;
-        // Big fixed wrappers that hold the actual content are app shells, not walls.
-        if (!modal && el.querySelector('main, article, [role="main"], [role="feed"]')) return false;
-        return true;
       };
       const pass = () => {
         const root = document.documentElement;
@@ -257,22 +237,6 @@
         for (const el of document.querySelectorAll('body > [inert], body > * > [inert], main[inert]')) {
           el.removeAttribute('inert');
           cleanups.push(() => el.setAttribute('inert', ''));
-        }
-        if (!overlays) return;
-        const seen = new Set();
-        const points = [[0.5, 0.5], [0.5, 0.2], [0.5, 0.8], [0.2, 0.5], [0.8, 0.5]];
-        for (const [fx, fy] of points) {
-          for (const el of document.elementsFromPoint(vw() * fx, vh() * fy)) {
-            if (seen.has(el)) continue;
-            seen.add(el);
-            const cs = getComputedStyle(el);
-            if (isWall(el, cs)) {
-              set(el, 'display', 'none');
-              break;
-            }
-            if (cs.filter.includes('blur')) set(el, 'filter', 'none');
-            if (cs.pointerEvents === 'none' && coverage(el) > 0.3) set(el, 'pointer-events', 'auto');
-          }
         }
       };
       pass();
@@ -346,7 +310,7 @@
       generation++;
       if (cfg.css) addSheet(cfg.css);
       if (cfg.glow.length) whenReady(() => startGlow(cfg.glow));
-      if (cfg.unwall) whenReady(() => startUnwall(cfg.unwall));
+      if (cfg.unscroll) whenReady(startUnscroll);
       if (cfg.customJs)
         whenReady(() =>
           later(Math.max(0, cfg.delay), () => {
@@ -396,7 +360,7 @@
   // 'preview' (live while editing). customJs: false skips the potion's own script.
   // framesOnly: the script skips the top page (it is registered for iframes).
   function sources(potion, { mode = 'auto', customJs = true, framesOnly = false } = {}) {
-    const { css, glow, unwall, frames } = compile(potion);
+    const { css, glow, unscroll, frames } = compile(potion);
     const hasJs = customJs && !!potion.js?.trim();
     const cfg = {
       id: potion.id,
@@ -406,7 +370,7 @@
       hostPatterns: (potion.sites || []).map(WP.match.hostOnly).map(WP.match.toRegExpSource).filter(Boolean),
       css,
       glow,
-      unwall,
+      unscroll,
       frames,
       customJs: hasJs,
       framesOnly,

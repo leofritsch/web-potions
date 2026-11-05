@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Web Potions",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Brew little potions that make websites behave the way you want.",
   "minimum_chrome_version": "135",
   "icons": {
@@ -25,7 +25,7 @@
     "page": "options/options.html",
     "open_in_tab": true
   },
-  "permissions": ["storage", "userScripts", "scripting", "contextMenus"],
+  "permissions": ["storage", "userScripts", "scripting", "contextMenus", "webNavigation"],
   "host_permissions": ["<all_urls>"],
   "content_scripts": [
     {
@@ -37,7 +37,7 @@
   ],
   "web_accessible_resources": [
     {
-      "resources": ["fonts/*"],
+      "resources": ["fonts/*", "help/*"],
       "matches": ["<all_urls>"]
     }
   ],

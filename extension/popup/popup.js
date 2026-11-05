@@ -74,11 +74,12 @@
 
   $('create').addEventListener('click', () => openOnPage('new'));
   $('settings').addEventListener('click', () => chrome.runtime.openOptionsPage());
-  $('browse').addEventListener('click', () => {
-    const q = $('search').value.trim();
+  function openBrowse(q = '') {
     chrome.tabs.create({ url: chrome.runtime.getURL(`options/options.html${q ? `?q=${encodeURIComponent(q)}` : ''}#browse`) });
     window.close();
-  });
+  }
+  $('browse').addEventListener('click', () => openBrowse($('search').value.trim()));
+  $('counter').addEventListener('click', () => openBrowse());
   $('open-setup').addEventListener('click', () => send({ type: 'openSetup' }).then(() => window.close()));
   $('search').addEventListener('input', () => {
     shown = PAGE;
@@ -90,6 +91,7 @@
   function renderCounter() {
     const digits = String(Math.min(potions.length, 9999)).padStart(4, '0');
     $('counter').replaceChildren(...[...digits].map((d) => h('b', {}, d)));
+    $('counter').setAttribute('aria-label', `${potions.length} potions. See them all`);
   }
 
   function editButton(p) {
@@ -104,6 +106,8 @@
     if (!p.sites?.length) return 'No sites, drink only';
     return p.sites.join(', ');
   }
+
+  const aiTag = (p) => p.ai && h('span', { class: 'tag', title: `Saved by an AI on ${p.ai}` }, 'AI');
 
   function renderHere() {
     const matching = potions.filter(matchesHere);
@@ -133,6 +137,7 @@
           { class: 'row' + (on ? '' : ' off') },
           h('span', { class: 'vial', title: on ? 'Bubbling away on this page' : 'Off here' }, icon('potion', 1), h('i'), h('i'), h('i')),
           h('div', { class: 'txt' }, h('span', { class: 'name' }, p.name), h('span', { class: 'sites' }, note)),
+          aiTag(p),
           h('div', { class: 'tools' }, editButton(p), sw),
         );
       }),
@@ -175,6 +180,7 @@
           { class: 'row' },
           h('span', { class: 'bullet' + (isLive(p) ? ' on' : ''), title: isLive(p) ? 'Running on this tab' : '' }),
           h('div', { class: 'txt' }, h('span', { class: 'name' }, highlight(p.name, q)), h('span', { class: 'sites' }, highlight(sitesText(p), q))),
+          aiTag(p),
           h(
             'div',
             { class: 'tools' },
@@ -231,7 +237,7 @@
   });
 
   // What the page is doing to you, in one sentence; the brewing window offers the fixes.
-  const PHRASES = { login: 'a login wall', overlay: 'an overlay', banner: 'a stuck banner', blur: 'blurred content', scroll: 'locked scrolling' };
+  const PHRASES = { overlay: 'an overlay', banner: 'a stuck banner', scroll: 'locked scrolling' };
   async function renderSpotted() {
     if (!web) return;
     const { findings = [] } = (await send({ type: 'diagnose', tabId })) || {};

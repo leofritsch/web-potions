@@ -14,10 +14,9 @@
       .promoted { border-color: #ffb000; background: #fffaf0; }
       .promoted::before { content: 'Promoted'; font-size: 11px; color: #a07000; }
       aside .card { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 14px; margin-bottom: 12px; }
-      .feed { filter: blur(4px); }
-      .wall { position: fixed; inset: 0; background: rgba(0, 0, 0, .55); display: grid; place-items: center; z-index: 100; }
-      .wall .modal { width: 380px; background: #fff; border-radius: 12px; padding: 28px; text-align: center; }
-      .wall button { background: #ff4500; color: #fff; border: 0; border-radius: 20px; padding: 10px 24px; font-weight: bold; }
+      .popup { position: fixed; inset: 0; background: rgba(0, 0, 0, .55); display: grid; place-items: center; z-index: 100; }
+      .popup .modal { width: 380px; background: #fff; border-radius: 12px; padding: 28px; text-align: center; }
+      .popup button { background: #ff4500; color: #fff; border: 0; border-radius: 20px; padding: 10px 24px; font-weight: bold; }
       .cookie { position: fixed; left: 0; right: 0; bottom: 0; background: #1a1a1b; color: #fff; padding: 12px 24px; z-index: 50; }
     </style>
   </head>
@@ -30,11 +29,11 @@
         <div class="card"><b>About community</b><p>A place to talk about everything.</p></div>
       </aside>
     </div>
-    <div class="wall" data-testid="login-wall">
+    <div class="popup" data-testid="newsletter-popup">
       <div class="modal">
-        <h2>Log in to keep reading</h2>
-        <p>See more posts from r/everything by logging in.</p>
-        <button>Log in</button>
+        <h2>Don't miss a thing!</h2>
+        <p>Get the Threadit newsletter, seven times a day.</p>
+        <button>Subscribe</button>
       </div>
     </div>
     <div class="cookie">We use cookies. Many, many cookies.</div>
@@ -73,12 +72,29 @@
     <script src="../extension/content/dom.js"></script>
     <script src="../extension/content/selector.js"></script>
     <script src="../extension/content/diagnose.js"></script>
+    <script src="../extension/content/ai-page.js"></script>
     <script src="../extension/content/picker.js"></script>
     <script src="../extension/content/menu.js"></script>
     <script src="../extension/content/panel.js"></script>
     <script src="../extension/content/ui.js"></script>
     <script>
       window.wpDev = (action, id) => wpUI(action, { id });
+      // Set up the README's pictures: ?shot=spotted has the brewing window open, and
+      // ?shot=fixed is the same page cleaned up.
+      const shot = new URLSearchParams(location.search).get('shot');
+      const cleanUp = { id: 'devfix', name: 'Quiet Threadit', sites: [], ingredients: [{ type: 'unscroll' }, { type: 'zap', selector: '.popup' }, { type: 'zap', selector: '.cookie' }], css: '', js: '' };
+      if (shot === 'spotted') wpUI('new').then(() => wpUI('glow', { words: ['AI', 'Rust'] }));
+      if (shot === 'fixed') {
+        const glow = { id: 'devglow', name: 'Glow', sites: [], ingredients: [{ type: 'glow', words: ['AI', 'Rust'], color: '#B6FF5C' }], css: '', js: '' };
+        for (const p of [cleanUp, glow]) WP.brew.sources(p, { mode: 'manual' }).forEach((s) => (0, eval)(s.code));
+      }
+      // ?card=1 shows the page right after an AI fixed it and saved the potion.
+      if (new URLSearchParams(location.search).has('card')) {
+        const fix = cleanUp;
+        WP.brew.sources(fix, { mode: 'manual' }).forEach((s) => (0, eval)(s.code));
+        WPUI.ai.card({ kind: 'saved', name: fix.name, id: fix.id, host: 'threadit.com', undo: { id: fix.id, prev: null } });
+        WPUI.ai.badge(Date.now() + 60000);
+      }
       // Auto-run saved potions like a registered user script would.
       WP.store.all().then((list) =>
         list.filter((p) => p.enabled && WP.match.test(p.sites, location.href)).forEach((p) =>

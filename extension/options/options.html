@@ -45,6 +45,40 @@
       </div>
 
       <div id="settings-panel" role="tabpanel" aria-labelledby="tab-settings" hidden>
+        <section class="ai-mode">
+          <div class="head">
+            <h2><label for="ai-mode">AI mode</label></h2>
+            <input id="ai-mode" class="switch" type="checkbox" />
+          </div>
+          <p class="sub">Lets an AI that drives this browser, like Claude in Chrome, test and save potions without asking you each time. Websites can't use it: the AI has to press a real key combination first, you allow each new site, and it can only save potions for the site it's on.</p>
+          <p class="risk"><b>The risk:</b> a page could trick the AI into saving a bad potion, and that code would keep running on that site. Anything an AI saves gets an <span class="tag">AI</span> tag and an Undo button, so check what it made.</p>
+          <div class="connect" id="ai-connect" hidden>
+            <div class="row">
+              <button class="btn primary" id="ai-copy">Copy instructions for your AI</button>
+              <span class="sub" id="ai-copied" role="status"></span>
+            </div>
+            <p class="sub">Paste them into your AI and say what you want changed. It has to drive this Chrome, so use Claude in Chrome. Built-in browser panes and cloud browsers don't have your extensions, so an AI can't reach Web Potions from them.</p>
+          </div>
+          <div class="allowed" id="ai-sites" hidden>
+            <h3>Sites an AI can use</h3>
+            <p class="sub">The first time an AI works on a site, a separate window asks you. Sites you've allowed:</p>
+            <ul class="list" id="ai-site-list"></ul>
+            <p class="sub" id="ai-site-empty" hidden>None yet.</p>
+            <label class="popular">
+              <input id="ai-popular" class="switch" type="checkbox" />
+              <span>Don't ask on <span id="ai-popular-count"></span> popular sites. That skips your yes on sites where anyone can post, so turn it off if you'd rather be asked.</span>
+            </label>
+            <details>
+              <summary class="sub">See the popular sites</summary>
+              <p class="sub" id="ai-popular-list"></p>
+            </details>
+          </div>
+          <figure class="where">
+            <img src="../help/where-switches.png" alt="Click the purple potion in the Chrome toolbar, or the puzzle piece if it's hidden. The switch is next to the potion's name." />
+            <figcaption class="sub">Where the switches are. Browse has them for all your potions.</figcaption>
+          </figure>
+        </section>
+
         <section>
           <div class="head">
             <h2>Back up your potions</h2>
@@ -84,6 +118,7 @@
     <script src="../lib/store.js"></script>
     <script src="../lib/brew.js"></script>
     <script src="../lib/share.js"></script>
+    <script src="../lib/popular-sites.js"></script>
     <script src="options.js"></script>
   </body>
 </html>

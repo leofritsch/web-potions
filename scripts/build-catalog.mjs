@@ -44,6 +44,7 @@ const potions = readdirSync(`${root}potions`)
     const p = parsed[0];
     if (!/^wp-[a-z0-9-]+$/.test(raw[0].id || '')) fail(`potions/${file}`, 'needs an id like "wp-short-name"');
     if (!p.description) fail(`potions/${file}`, 'needs a description');
+    if (p.js.trim()) fail(`potions/${file}`, "can't hold JavaScript: the catalog is fetched at runtime, so it has to stay plain data");
     if (p.ingredients.length !== (raw[0].ingredients || []).length) fail(`potions/${file}`, 'has an ingredient Web Potions does not understand');
     const potion = tidy(p);
     writeFileSync(`${root}potions/${file}`, JSON.stringify({ webPotions: 1, potions: [potion] }, null, 2) + '\n');

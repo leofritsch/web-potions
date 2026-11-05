@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Allow window (dev)</title>
+  </head>
+  <body>
+    <script src="chrome-mock.js"></script>
+    <script>
+      // Loads the real Allow window with chrome.* mocked. Try ?site=reddit.com
+      fetch('/extension/allow/allow.html', { cache: 'no-store' })
+        .then((r) => r.text())
+        .then((html) => {
+          document.open();
+          document.write(html.replace(/(src|href)="(?!#|https?:|\/)([^"]+)"/g, (m, attr, path) => `${attr}="${new URL(path, location.origin + '/extension/allow/').pathname}"`));
+          document.close();
+        });
+    </script>
+  </body>
+</html>

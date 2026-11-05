@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'" />
+    <title>The Daily Popup</title>
+    <!-- A plain page for testing AI mode with the real extension: no chrome.* mock here.
+         Its pop-up arrives late, a script swallows the wheel, and a strict content security
+         policy tries to keep our badge and card out. -->
+    <style>
+      body { margin: 0; font: 17px/1.6 Georgia, serif; color: #1a1a1b; background: #fff; }
+      header { position: sticky; top: 0; padding: 12px 24px; font: bold 20px system-ui, sans-serif; background: #fff; border-bottom: 1px solid #ddd; }
+      article { max-width: 640px; margin: 32px auto; padding: 0 24px; }
+      .news-popup { position: fixed; inset: 0; z-index: 100; display: grid; place-items: center; background: rgba(0, 0, 0, .6); }
+      .news-popup div { width: 360px; padding: 28px; text-align: center; font-family: system-ui, sans-serif; background: #fff; border-radius: 10px; }
+    </style>
+  </head>
+  <body>
+    <header>The Daily Popup</header>
+    <article id="story"></article>
+    <script>
+      const story = document.getElementById('story');
+      story.innerHTML = '<h1>Why this page does not want you to read it</h1>' + Array.from({ length: 30 }, (_, i) => `<p>Paragraph ${i + 1}. Plenty of words that a person might like to read, if only the page would let them scroll down this far.</p>`).join('');
+      setTimeout(() => {
+        const popup = document.createElement('div');
+        popup.className = 'news-popup';
+        popup.innerHTML = '<div><h2>Wait, before you go!</h2><p>Join 40 million people on our newsletter.</p></div>';
+        document.body.append(popup);
+        // The lock CSS can't show: scripts swallow every way of scrolling.
+        for (const type of ['wheel', 'touchmove']) addEventListener(type, (e) => e.preventDefault(), { passive: false, capture: true });
+      }, 1500);
+    </script>
+  </body>
+</html>

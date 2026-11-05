@@ -7,7 +7,24 @@
   <body>
     <script>
       // Loads the real options page with chrome.* mocked and the catalog from this repo.
-      window.WP_CATALOG_URL = new URLSearchParams(location.search).has('offline') ? '/nowhere.json' : '/potions/catalog.json';
+      // ?sample=1 starts with AI mode on and a small shelf, including potions an AI saved.
+      const params = new URLSearchParams(location.search);
+      window.WP_CATALOG_URL = params.has('offline') ? '/nowhere.json' : '/potions/catalog.json';
+      if (params.has('sample')) {
+        const mk = (id, name, sites, extra) => ({ id, name, sites, enabled: true, ingredients: [], css: 'a {}', js: '', repeat: 0, delay: 0, world: 'USER_SCRIPT', createdAt: Date.now(), ...extra });
+        localStorage.setItem(
+          'wp-dev-storage',
+          JSON.stringify({
+            aiMode: true,
+            potions: [
+              mk('sample-ai-1', 'Quiet Reddit', ['*.reddit.com/*'], { ai: 'reddit.com', js: 'x()' }),
+              mk('sample-ai-2', 'Quiet YouTube', ['*.youtube.com/*'], { ai: 'youtube.com', enabled: false }),
+              mk('sample-3', 'Wiki wide', ['*.wikipedia.org/*']),
+              mk('sample-4', 'Gray mode', []),
+            ],
+          }),
+        );
+      }
     </script>
     <script src="chrome-mock.js"></script>
     <script>

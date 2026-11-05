@@ -8,6 +8,7 @@
   const QUICK_STYLES = [
     ['Hide', 'display: none'],
     ['Blur', 'filter: blur(8px)'],
+    ['Unblur', 'filter: none'],
     ['Dim', 'opacity: .35'],
     ['Grayscale', 'filter: grayscale(1)'],
     ['Bigger text', 'font-size: 1.25em'],
@@ -100,6 +101,9 @@
     const sel = UI.selector.unique(el);
     const like = UI.selector.similar(el);
     const r = el.getBoundingClientRect();
+    // The blur you see may come from a parent, so Unblur aims at whichever element has it.
+    let blurred = el;
+    while (blurred && !getComputedStyle(blurred).filter.includes('blur')) blurred = blurred.parentElement;
     const commit = (ing) => {
       close();
       opts.onCommit(ing);
@@ -111,7 +115,12 @@
     const items = [
       { key: 'r', icon: 'picker', label: 'Remove', run: () => commit({ type: 'zap', selector: sel }) },
       like && { key: 'a', label: `Remove all ${like.count} like this`, run: () => commit({ type: 'zap', selector: like.selector }) },
-      { key: 'b', icon: 'veil', label: 'Blur', run: () => commit({ type: 'style', selector: sel, css: 'filter: blur(10px)' }) },
+      {
+        key: 'b',
+        icon: 'veil',
+        label: blurred ? 'Unblur' : 'Blur',
+        run: () => commit(blurred ? { type: 'style', selector: UI.selector.unique(blurred), css: 'filter: none' } : { type: 'style', selector: sel, css: 'filter: blur(10px)' }),
+      },
       {
         key: 'e',
         icon: 'brush',

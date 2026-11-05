@@ -104,6 +104,16 @@
     return `*.${parts.slice(-keep).join('.')}/*`;
   }
 
+  // True only when a pattern can't reach beyond the host of `url` and its subdomains.
+  // On www.reddit.com, "*.reddit.com/*" is fine. On old.reddit.com it isn't, because a
+  // subdomain can't speak for its parent: think evil.github.io and "*.github.io/*".
+  function within(pattern, url) {
+    const parsed = parse(pattern);
+    if (!parsed || (parsed.scheme && !['http', 'https', '*'].includes(parsed.scheme))) return false;
+    const here = bareHost(url).toLowerCase();
+    return !!here && parsed.host.replace(/^\*\./, '').replace(/^www\./, '') === here;
+  }
+
   const isWebUrl = (url) => /^(https?|file):/i.test(url || '');
 
   function bareHost(url) {
@@ -143,5 +153,5 @@
     return core.charAt(0).toUpperCase() + core.slice(1);
   }
 
-  WP.match = { parse, toRegExpSource, compile, test, chromePatterns, suggest, siteName, bareHost, isWebUrl, hostOnly, frameSite };
+  WP.match = { parse, toRegExpSource, compile, test, chromePatterns, suggest, siteName, bareHost, isWebUrl, hostOnly, frameSite, within };
 })((self.WP = self.WP || {}));
