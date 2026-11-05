@@ -30,6 +30,7 @@ function makeBrowser() {
     session,
     executed: [],
     openTabs: [],
+    openedTabs: [],
     listeners: { storage: [] },
     // Flips AI mode the way the settings page does.
     setAiMode: (on) => browser.chrome.storage.local.set({ aiMode: on }),
@@ -46,7 +47,7 @@ function makeBrowser() {
       getManifest: () => ({ version: 'test' }),
       getURL: (p) => `ext://${p}`,
       onMessage: { addListener: (fn) => (browser.listeners.message = fn) },
-      onInstalled: event(),
+      onInstalled: { addListener: (fn) => (browser.listeners.installed = fn) },
       onStartup: event(),
     },
     storage: { local: area(local), session: area(session), onChanged: { addListener: (fn) => browser.listeners.storage.push(fn) } },
@@ -64,7 +65,7 @@ function makeBrowser() {
     tabs: {
       get: async (id) => ({ id, url: browser.url }),
       query: async () => browser.openTabs,
-      create: async () => {},
+      create: async ({ url }) => void browser.openedTabs.push(url),
       sendMessage: async () => {},
       onActivated: event(),
       onUpdated: event(),
@@ -439,6 +440,17 @@ await test('catalog potions are plain data, with no JavaScript', () => {
 });
 
 console.log('What the user sees');
+await test('the welcome page opens on install, and not on updates', () => {
+  const b = makeBrowser();
+  b.listeners.installed({ reason: 'update' });
+  assert.equal(b.openedTabs.length, 0);
+  b.listeners.installed({ reason: 'install' });
+  assert.deepEqual(b.openedTabs, ['ext://welcome/welcome.html']);
+});
+await test('the store summary fits its limit of 132 characters', () => {
+  const { description } = JSON.parse(readFileSync(`${root}extension/manifest.json`, 'utf8'));
+  assert.ok(description.length <= 132, `${description.length} characters`);
+});
 await test('the toolbar says AI whenever AI mode is on, and counts potions otherwise', async () => {
   const b = makeBrowser();
   b.url = 'https://reddit.com/';

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Welcome to Web Potions</title>
+    <link rel="stylesheet" href="welcome.css" />
+  </head>
+  <body>
+    <template id="site-template">
+      <div class="browser">
+        <div class="bar"><i></i><i></i><i></i><span class="url">anysite.example</span></div>
+        <div class="site">
+          <div class="ad-top">Flash sale! One hour only! Maybe two!</div>
+          <div class="masthead"><b>The Daily Scroll</b><span>News</span><span>Videos</span><span class="more-ads">More ads</span></div>
+          <div class="columns">
+            <div class="story">
+              <h3>Ten things you won't believe about houseplants</h3>
+              <div class="pic"><canvas width="130" height="24"></canvas></div>
+              <p>Your fern has been keeping <mark>secrets</mark>. Number seven will change how you water forever, and number eight is about moss.</p>
+            </div>
+            <div class="side">
+              <div class="ad-box">Click me! Everyone's doing it!</div>
+              <h4>Trending</h4>
+              <ul>
+                <li>A cat learns to open doors</li>
+                <li>Moss, explained</li>
+                <li>Is this soup?</li>
+              </ul>
+            </div>
+          </div>
+          <div class="modal">
+            <div>
+              <h4>Wait! Don't go!</h4>
+              <p>Get our newsletter, seven times a day.</p>
+              <button tabindex="-1">Subscribe</button>
+              <small>No thanks, I hate saving money</small>
+            </div>
+          </div>
+          <div class="cookies">We use cookies. Many, many cookies. <button tabindex="-1">Accept all</button></div>
+        </div>
+      </div>
+    </template>
+
+    <header class="hero" id="hero">
+      <div class="scene before" aria-hidden="true"></div>
+      <div class="scene after" aria-hidden="true"><canvas class="sky" width="240" height="135"></canvas></div>
+      <div class="seam" aria-hidden="true">
+        <span class="wand" id="wand"></span>
+        <span class="tag" id="drag-tag">Drag me</span>
+      </div>
+      <div class="pitch">
+        <h1>Make the web how YOU want it to be</h1>
+        <p>Hide what bugs you. Restyle what's ugly. Highlight what matters.</p>
+      </div>
+      <input class="slider" id="slider" type="range" min="0" max="100" value="100" aria-label="Compare a page before and after a potion" />
+    </header>
+
+    <main>
+      <section class="setup">
+        <h2>Two quick things first</h2>
+        <ol class="checks">
+          <li id="check-scripts">
+            <span class="box" aria-hidden="true"></span>
+            <div>
+              <h3>Switch on Allow User Scripts</h3>
+              <p>Chrome asks for this before any extension can change pages for you. On the page that opens, find <b>Allow User Scripts</b> and switch it on.</p>
+            </div>
+            <button class="btn primary" id="open-setup">Open that page</button>
+            <span class="state">Done</span>
+          </li>
+          <li id="check-pin">
+            <span class="box" aria-hidden="true"></span>
+            <div>
+              <h3>Pin the potion to your toolbar</h3>
+              <p>Click the puzzle piece next to the address bar, then the pin next to Web Potions.</p>
+            </div>
+            <span class="state">Done</span>
+          </li>
+        </ol>
+      </section>
+
+      <section class="how">
+        <div>
+          <h2>How it works</h2>
+          <ol class="steps">
+            <li>
+              <h3>Point at anything</h3>
+              <p>On any site, click the potion in your toolbar and pick what bugs you.</p>
+            </li>
+            <li>
+              <h3>Hide it or change it</h3>
+              <p>Remove it, restyle it, or make words glow. You see the result right away.</p>
+            </li>
+            <li>
+              <h3>It sticks</h3>
+              <p>Save it as a potion and it runs by itself every time you visit. Every potion has an on/off switch.</p>
+            </li>
+          </ol>
+          <p class="more">Or start with a ready-made one. <a id="browse" href="../options/options.html#browse">Browse the potions</a></p>
+        </div>
+        <figure>
+          <img src="../help/tools.jpg" width="740" height="490" alt="The tools in the brewing window: Pick and zap, Keyword glow, Unlock scroll, Image veil, Custom CSS and Custom JS." />
+        </figure>
+      </section>
+    </main>
+
+    <section class="mirror">
+      <canvas class="sky" width="240" height="90" aria-hidden="true"></canvas>
+      <div class="mirror-inner">
+        <span class="glass" id="mirror" aria-hidden="true"></span>
+        <div class="talk">
+          <h2>Ask your AI to make it so</h2>
+          <p>Use an AI that can drive your Chrome, like Claude in Chrome? Tell it what you want in plain words. It tries the change on the page, checks that it works, and saves it as a potion.</p>
+          <div class="bubbles" aria-hidden="true">
+            <p class="you">Hide that pop-up and make this site purple.</p>
+            <p class="ai">Done. It's saved as a potion, with a switch and an Undo button.</p>
+          </div>
+          <a class="btn" href="../options/options.html#settings">Set up AI mode</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="free">
+      <p class="big">Free. Open source. No account. No tracking of any kind.</p>
+      <p>Your potions stay in your browser. The one thing Web Potions fetches is its catalog, a plain file from GitHub, and nothing about you goes with it. If you use AI mode, what your AI reads goes wherever that AI sends it.</p>
+      <p><a href="https://github.com/leofritsch/web-potions" target="_blank" rel="noopener">See the code on GitHub</a></p>
+    </section>
+
+    <footer>Best viewed in your own way.</footer>
+
+    <script src="../lib/pixels.js"></script>
+    <script src="welcome.js"></script>
+  </body>
+</html>

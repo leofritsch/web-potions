@@ -8,9 +8,11 @@
       html { background: var(--paper); }
       body { padding: 0; }
       .win { max-width: none; border: 0; box-shadow: none; }
-      section { border-bottom: 0; gap: 12px; }
+      section { border-bottom: 0; gap: 12px; padding-bottom: 8px; }
       h2 { font-size: 21px; overflow-wrap: anywhere; }
-      .row { margin-top: 6px; flex-wrap: wrap; }
+      p { margin: 0; }
+      /* Stays on screen even if Chrome makes the window shorter than we asked. */
+      .answer { position: sticky; bottom: 0; display: flex; flex-wrap: wrap; gap: 10px; padding: 12px 24px 16px; background: var(--paper); border-top: 1px solid var(--line); }
     </style>
   </head>
   <body>
@@ -23,11 +25,11 @@
         <h2 id="title"></h2>
         <p>An AI is asking to test and save potions for this site. Say yes only if you asked it to.</p>
         <p class="sub">You won't be asked again for this site. You can take it back in Settings.</p>
-        <div class="row">
-          <button class="btn primary" id="allow"></button>
-          <button class="btn" id="deny">Not now</button>
-        </div>
       </section>
+      <div class="answer">
+        <button class="btn primary" id="allow"></button>
+        <button class="btn" id="deny">Not now</button>
+      </div>
     </main>
     <script src="../lib/pixels.js"></script>
     <script src="allow.js"></script>

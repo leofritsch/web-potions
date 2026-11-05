@@ -81,7 +81,7 @@ async function aiAsk(host) {
   if (denied && Date.now() - denied < AI_DENIED_MS) return;
   const open = (await session.get(askKey(host)))[askKey(host)];
   if (open != null && (await chrome.windows.update(open, { focused: true }).catch(() => null))) return;
-  const win = await chrome.windows.create({ url: chrome.runtime.getURL(`allow/allow.html?site=${encodeURIComponent(host)}`), type: 'popup', width: 460, height: 300, focused: true });
+  const win = await chrome.windows.create({ url: chrome.runtime.getURL(`allow/allow.html?site=${encodeURIComponent(host)}`), type: 'popup', width: 460, height: 380, focused: true });
   await session.remove(deniedKey(host));
   await session.set({ [askKey(host)]: win.id });
 }

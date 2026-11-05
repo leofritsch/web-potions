@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Welcome page (dev)</title>
+  </head>
+  <body>
+    <script>
+      // Loads the real welcome page with chrome.* mocked. ?setup=1 shows the first step undone.
+      window.WP_DEV_NO_USERSCRIPTS = new URLSearchParams(location.search).has('setup');
+    </script>
+    <script src="chrome-mock.js"></script>
+    <script>
+      fetch('/extension/welcome/welcome.html', { cache: 'no-store' })
+        .then((r) => r.text())
+        .then((html) => {
+          document.open();
+          document.write(html.replace(/(src|href)="(?!#|https?:|\/)([^"]+)"/g, (m, attr, path) => `${attr}="${new URL(path, location.origin + '/extension/welcome/').pathname}"`));
+          document.close();
+        });
+    </script>
+  </body>
+</html>

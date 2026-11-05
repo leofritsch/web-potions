@@ -359,7 +359,10 @@ function boot() {
   requestSync();
   refreshMenus();
 }
-chrome.runtime.onInstalled.addListener(() => migrateIngredients().finally(boot));
+chrome.runtime.onInstalled.addListener((details) => {
+  migrateIngredients().finally(boot);
+  if (details.reason === 'install') chrome.tabs.create({ url: chrome.runtime.getURL('welcome/welcome.html') });
+});
 chrome.runtime.onStartup.addListener(boot);
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area !== 'local' || !changes[WP.store.KEY]) return;

@@ -30,7 +30,7 @@ html {
   background:
     repeating-conic-gradient(#EFEAFB 0 25%, var(--paper) 0 50%) 0 0 / 4px 4px;
 }
-body { margin: 0; padding: 48px 16px 64px; font: 13px/1.5 var(--body); color: var(--ink); -webkit-font-smoothing: antialiased; }
+body { margin: 0; padding: 48px 16px 64px; font: 13px/1.5 var(--body); font-variant-ligatures: none; color: var(--ink); -webkit-font-smoothing: antialiased; }
 svg { display: block; flex: none; }
 button, input, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 2px solid var(--potion); outline-offset: 1px; }

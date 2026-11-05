@@ -130,6 +130,7 @@
   --body: Verdana, Tahoma, Geneva, sans-serif;
   --code: ui-monospace, Menlo, Monaco, monospace;
   font: 12px/1.45 var(--body);
+  font-variant-ligatures: none;
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
 }
@@ -397,7 +398,7 @@ kbd {
   text-shadow: 1px 1px 0 var(--ink), 1px 0 0 var(--ink), 0 1px 0 var(--ink);
   background-color: rgba(176, 38, 140, .7);
   border: 1px solid var(--ink); box-shadow: 2px 2px 0 var(--ink);
-  animation: ai-badge 16s ease-in-out infinite alternate;
+  animation: ai-badge 3s ease-in-out infinite alternate;
 }
 @keyframes ai-badge {
   0% { background-color: rgba(176, 38, 140, .7); }

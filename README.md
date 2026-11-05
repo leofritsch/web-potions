@@ -229,6 +229,8 @@ python3 -m http.server 8765   # from the repo root
   `?setup=1` or `?empty=1` for those states).
 - <http://127.0.0.1:8765/dev/options.html#browse> is the Browse page, reading the
   catalog from your local `potions/` (add `?offline=1` to see it fail).
+- <http://127.0.0.1:8765/dev/welcome.html> is the page that opens on install (add `?setup=1`
+  to see the setup step still to do).
 - <http://127.0.0.1:8765/dev/allow.html?site=reddit.com> is the window that asks before an AI
   works on a new site.
 - <http://127.0.0.1:8765/dev/popups.html> is a plain page with a late pop-up and a
