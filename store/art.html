@@ -97,6 +97,27 @@
         return el;
       }
 
+      // The welcome page's own hero, so these pictures can't drift from it. Moving the slider
+      // the way a person would stops its opening sweep and clears the "Drag me" tag.
+      const HERO_ONLY = 'html { overflow: hidden; } main, footer, .scroll-cue, .tag { display: none; } .wand { animation: none; }';
+      function welcome(width, height, css, zoom = 1) {
+        const el = document.createElement('div');
+        el.className = 'art';
+        el.style.inset = '0';
+        const iframe = document.createElement('iframe');
+        Object.assign(iframe, { src: '/extension/welcome/welcome.html', width: width / zoom, height: height / zoom });
+        iframe.style.transform = `scale(${zoom})`;
+        iframe.addEventListener('load', () => {
+          const page = iframe.contentDocument;
+          page.head.append(Object.assign(page.createElement('style'), { textContent: HERO_ONLY + css }));
+          const slider = page.getElementById('slider');
+          slider.value = 46;
+          slider.dispatchEvent(new Event('input'));
+        });
+        el.append(iframe);
+        return el;
+      }
+
       function shelf() {
         const at = Date.now();
         const mk = (name, sites, i, enabled = true) => ({ id: `pdev${String(i).padStart(8, '0')}`, name, sites, enabled, ingredients: [], css: '', js: '', repeat: 0, delay: 0, world: 'USER_SCRIPT', createdAt: at - i * 60000, updatedAt: at - i * 60000 });
@@ -115,9 +136,8 @@
       const SHOTS = {
         '1-tagline': {
           hue: 'purple',
-          title: 'Make the web<br>how YOU want<br>it to be',
-          glow: halo(960, 400, 215),
-          art: (hue) => sprite('bigWand', 11, hue, 960, 400),
+          glow: [],
+          art: () => welcome(1280, 800, '.hero { padding: 26px 0 0; } .compare { zoom: 1.1; --stage: 396px; margin-top: 58px; } .side li:nth-child(3) { display: none; }'),
         },
         '2-hide': {
           hue: 'rose',
@@ -153,16 +173,31 @@
         'tile-small': {
           width: 440,
           height: 280,
-          hue: 'green',
-          glow: halo(220, 140, 130, 1.25),
-          art: (hue) => sprite('potion', 12, hue, 220, 140),
+          hue: 'purple',
+          glow: [],
+          // Too small to read a fake page, so only the clutter and the magic sky stay.
+          art: () => welcome(440, 280, `
+            .pitch, .story h3, .story p, .side h4, .side ul, .masthead span { display: none; }
+            .hero { padding: 76px 0 0; }
+            .compare { width: 540px; --stage: 280px; margin: 0 auto; }
+            .wand { transform: scale(1.2); }
+            .promo { font-size: 0; }
+            .promo::before { content: 'Flash sale!'; font-size: 15px; }
+            .before .masthead b { font-size: 16px; }
+            .columns { grid-template-columns: 46% 54%; padding-top: 14px; }
+            .side { display: block; }
+            .pic { height: 150px; margin: 0; }
+            .pic canvas { object-position: 100% 100%; }
+            .ad-box { height: 78px; }
+            .chat { width: 172px; bottom: 12px; }
+          `, 0.72),
         },
         'tile-marquee': {
           width: 1400,
           height: 560,
           hue: 'purple',
-          glow: halo(700, 280, 300, 1.2),
-          art: (hue) => sprite('bigWand', 9, hue, 700, 280),
+          glow: [],
+          art: () => welcome(1400, 560, '.pitch { display: none; } .hero { padding: 72px 0 0; } .compare { zoom: 1.12; --stage: 385px; margin: 0 auto; }'),
         },
       };
 

@@ -10,7 +10,7 @@ keyword spam.
 
 **Summary** (the manifest's `description`, 132 characters at most):
 
-> Make the web how YOU want it to be. Hide what bugs you, restyle any site, or ask your AI to make it so. Free, no tracking.
+> ⚗️ Brew the web you want. A Chrome extension to remove, restyle, and reshape any website.
 
 **Category:** Make Chrome Yours, then Functionality & UI (or the closest match in the dropdown)
 
@@ -91,18 +91,9 @@ Double-check this one when you fill it in. It's my reading of the form, and the 
 ## Test instructions for the reviewer
 
 ```text
-No account or login is needed.
+No login needed. In chrome://extensions, open Web Potions' Details and switch on Allow User Scripts. On any site, click the toolbar icon, then Create new potion. Use Pick & zap to hide something, then Save potion and reload: the change stays. The popup switch turns it off. Browse shows ready-made potions.
 
-1. Open the Details page for Web Potions in chrome://extensions and switch on Allow User Scripts. The welcome page links to it.
-2. On any site, click the toolbar icon, then Create new potion. Use Pick & zap to hide something, then Save potion. Reload the page: the change is still there. Use the switch in the toolbar popup to turn it off.
-3. Browse in the popup shows the catalog of ready-made potions.
-
-AI mode is optional and off by default. It lets a browser agent the user already runs, such as Claude in Chrome, test and save potions.
-- Turn it on under Settings.
-- A real Ctrl+Alt+Shift+P key press unlocks one tab for one site, which page scripts can't fake. Until then, page messages get no answer.
-- The first time on a site that isn't on the popular list, a separate window asks the user to allow it.
-- An AI can only save potions for the site it's on. It can't delete anything, or change potions that also run elsewhere.
-- Every save shows a card with an Undo button, and an "Operated by AI" badge shows while a session is active.
+AI mode is optional and off by default (Settings). It lets the user's browser agent test and save potions after a real Ctrl+Alt+Shift+P key press, with an allow window, badge and Undo.
 ```
 
 ## Images
