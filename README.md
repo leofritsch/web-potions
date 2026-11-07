@@ -43,7 +43,9 @@ run `node scripts/build-catalog.mjs` and open a pull request.
 
 ## Install
 
-Web Potions isn't on the Chrome Web Store. Loading it yourself takes a minute:
+Web Potions is on the [Chrome Web Store](https://chromewebstore.google.com/detail/web-potions/nnpjikibnbjppeadndopheldgocefhpk)
+
+Or loading it yourself takes a minute:
 
 1. Download this repo (**Code → Download ZIP**, then unzip it) or `git clone` it.
 2. Open `chrome://extensions` and switch on **Developer mode** (top right).
