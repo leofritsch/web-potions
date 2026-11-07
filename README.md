@@ -11,7 +11,7 @@
 </p>
 
 <p align="center">
-  <a href="https://chromewebstore.google.com/detail/web-potions/nnpjikibnbjppeadndopheldgocefhpk"><b>Add to Chrome</b></a>. It's free on the Chrome Web Store.
+  <a href="https://chromewebstore.google.com/detail/web-potions/nnpjikibnbjppeadndopheldgocefhpk"><b>⚗️ Add to Chrome</b></a>. It's free on the Chrome Web Store.
 </p>
 
 <p align="center">
