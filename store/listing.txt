@@ -1,5 +1,9 @@
 # Chrome Web Store listing
 
+**Live:** https://chromewebstore.google.com/detail/web-potions/nnpjikibnbjppeadndopheldgocefhpk
+(version 0.5.0, approval confirmed 2026-11-07). To ship an update, raise `version` in
+`extension/manifest.json`, zip the `extension` folder and upload it in the dashboard.
+
 Everything to paste into the developer dashboard. Keep it true to what the extension does:
 the store rejects misleading descriptions, and it counts repeating a word more than 5 times as
 keyword spam.

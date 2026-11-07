@@ -51,7 +51,7 @@ typeof webPotions === 'undefined' ? 'no answer' : await webPotions.hello()
 | `denied: true` | The user said no to this site | Stop, and don't ask again unless they tell you to |
 | `allowUserScripts: false` | A Chrome setting is off | Send them the `tellUser` from `try` or `save`. You can still `look` |
 | `locked: true` | The user clicked "Lock it out" on this site | Stop. Pressing the keys won't help. If they want you back, they can turn AI mode off and on |
-| `'no answer'` | The key press missed, or the extension is missing | Click an empty part of the page and press again. Then reload and press again. If there's still nothing, Web Potions probably isn't installed in this browser or is out of date: tell the user, and point them to https://github.com/leofritsch/web-potions |
+| `'no answer'` | The key press missed, or the extension is missing | Click an empty part of the page and press again. Then reload and press again. If there's still nothing, Web Potions probably isn't installed in this browser or is out of date: tell the user, and point them to https://chromewebstore.google.com/detail/web-potions/nnpjikibnbjppeadndopheldgocefhpk |
 
 The unlock lasts 30 minutes for this tab and this site, and it survives reloads. Leaving the site ends it, so press the keys again on the next site. `webPotions` comes back by itself after a reload.
 

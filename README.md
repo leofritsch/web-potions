@@ -11,6 +11,10 @@
 </p>
 
 <p align="center">
+  <a href="https://chromewebstore.google.com/detail/web-potions/nnpjikibnbjppeadndopheldgocefhpk"><b>Add to Chrome</b></a>. It's free on the Chrome Web Store.
+</p>
+
+<p align="center">
   <img src="docs/spotted.jpg" width="820" alt="The brewing window open on a page with a sale banner stuck to the bottom. Under “Spotted on this page” it lists the banner with a Fix button, and below that is the grid of ingredients.">
 </p>
 
@@ -43,18 +47,26 @@ run `node scripts/build-catalog.mjs` and open a pull request.
 
 ## Install
 
-Web Potions is on the [Chrome Web Store](https://chromewebstore.google.com/detail/web-potions/nnpjikibnbjppeadndopheldgocefhpk)
+1. Open Web Potions on the [Chrome Web Store](https://chromewebstore.google.com/detail/web-potions/nnpjikibnbjppeadndopheldgocefhpk) and click **Add to Chrome**.
+2. The welcome page that opens walks you through two quick steps: switch on
+   **Allow User Scripts**, and pin the purple potion to your toolbar. Chrome asks
+   for Allow User Scripts before any extension can run your own scripts on pages.
 
-Or loading it yourself takes a minute:
+Works in Chrome 135 and newer.
+
+### From source
+
+To try changes before they reach the store, load it yourself. It takes a minute:
 
 1. Download this repo (**Code → Download ZIP**, then unzip it) or `git clone` it.
 2. Open `chrome://extensions` and switch on **Developer mode** (top right).
 3. Click **Load unpacked** and choose the `extension` folder.
 4. Click **Details** on Web Potions and switch on **Allow User Scripts**.
-   Chrome asks for this before any extension can run your own scripts on pages.
 5. Pin the purple potion to your toolbar.
 
-Works in Chrome 135 and newer.
+Each copy keeps its own potions. To move them from one copy to the other, open
+Settings (the gear in the popup), click **Export all** in one, then **Import potions**
+in the other.
 
 ## Brew your first potion
 
